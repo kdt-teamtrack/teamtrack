@@ -25,6 +25,9 @@ import androidx.navigation.compose.rememberNavController
 import com.teamtrack.teamtrack.attendance.AttendanceScreen
 import com.teamtrack.teamtrack.attendance.QRScreen
 import com.teamtrack.teamtrack.attendance.ResultScreen
+import com.teamtrack.teamtrack.meetingUI.MeetingApp
+import com.teamtrack.teamtrack.meetingUI.MeetingPage
+import com.teamtrack.teamtrack.teamLeaderPageUI.Screen1
 import com.teamtrack.teamtrack.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -48,7 +51,7 @@ class MainActivity : ComponentActivity() {
                             ResultScreen(navController)
                         }
                         composable("screen3") { Screen3() }
-                        composable("screen4") { MeetingPage() }
+                        composable("screen4") { MeetingApp() }
                     }
                 }
             }
@@ -69,25 +72,25 @@ fun MainScreen(navController: androidx.navigation.NavHostController) {
             onClick = { navController.navigate("screen1") },
             modifier = Modifier.padding(8.dp)
         ) {
-            Text("Go to Screen 1")
+            Text("팀장의 Main화면")
         }
         Button(
             onClick = { navController.navigate("screen2") },
             modifier = Modifier.padding(8.dp)
         ) {
-            Text("Go to Screen 2")
+            Text("근태관리")
         }
         Button(
             onClick = { navController.navigate("screen3") },
             modifier = Modifier.padding(8.dp)
         ) {
-            Text("Go to Screen 3")
+            Text("팀원 업무관리")
         }
         Button(
             onClick = { navController.navigate("screen4") },
             modifier = Modifier.padding(8.dp)
         ) {
-            Text("Go to Screen 4")
+            Text("회의록")
         }
     }
 }
