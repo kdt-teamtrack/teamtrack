@@ -4,17 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.teamtrack.teamtrack.attendance.AttendanceScreen
+import com.teamtrack.teamtrack.attendance.QRScreen
+import com.teamtrack.teamtrack.attendance.ResultScreen
 import com.teamtrack.teamtrack.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,7 +37,11 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("main") { MainScreen(navController) }
                         composable("screen1") { Screen1() }
-                        composable("screen2") { Screen2() }
+                        composable("screen2") { AttendanceScreen(navController) }
+                        composable("qrScreen") { QRScreen(navController) }
+                        composable("resultScreen/{result}") { backStackEntry ->
+                            ResultScreen(navController)
+                        }
                         composable("screen3") { Screen3() }
                         composable("screen4") { Screen4() }
                     }
@@ -108,44 +117,4 @@ fun Screen4() {
         text = "This is Screen 4",
         modifier = Modifier.fillMaxSize()
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    MyApplicationTheme {
-        MainScreen(rememberNavController())
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Screen1Preview() {
-    MyApplicationTheme {
-        Screen1()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Screen2Preview() {
-    MyApplicationTheme {
-        Screen2()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Screen3Preview() {
-    MyApplicationTheme {
-        Screen3()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Screen4Preview() {
-    MyApplicationTheme {
-        Screen4()
-    }
 }
