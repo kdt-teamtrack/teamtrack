@@ -94,13 +94,13 @@ fun Screen2() {
     )
 }
 
-@Composable
-fun Screen3() {
-    Text(
-        text = "This is Screen 3",
-        modifier = Modifier.fillMaxSize()
-    )
-}
+//@Composable
+//fun Screen3() {
+//    Text(
+//        text = "This is Screen 3",
+//        modifier = Modifier.fillMaxSize()
+//    )
+//}
 
 @Composable
 fun Screen4() {
