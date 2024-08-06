@@ -92,15 +92,6 @@ fun MainScreen(navController: androidx.navigation.NavHostController) {
     }
 }
 
-
-//@Composable
-//fun Screen1() {
-//    Text(
-//        text = "팀장의 메인 페이지",
-//        modifier = Modifier.fillMaxSize()
-//    )
-//}
-
 @Composable
 fun Screen2() {
     Text(
@@ -108,15 +99,6 @@ fun Screen2() {
         modifier = Modifier.fillMaxSize()
     )
 }
-
-@Composable
-fun Screen3() {
-    Text(
-        text = "3번팀원 Task",
-        modifier = Modifier.fillMaxSize()
-    )
-}
-
 
 @Composable
 fun Screen4() {
