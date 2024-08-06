@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Composable
-fun Screen3() {
+fun TodoListScreen() {
     val todoItems = remember {
         mutableStateListOf(
             TodoItem(1, "할 일 1", false),
@@ -32,7 +32,7 @@ fun Screen3() {
             TodoItem(3, "할 일 3", false)
         )
     }
-    memberTodo(todoItems = todoItems)
+    MemberTodoList(todoItems = todoItems)
 }
 
 data class TodoItem(
@@ -42,7 +42,7 @@ data class TodoItem(
 )
 
 @Composable
-fun memberTodo(todoItems: MutableList<TodoItem>) {
+fun MemberTodoList(todoItems: MutableList<TodoItem>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -144,5 +144,5 @@ fun TodoItemRow(item: TodoItem) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewTodoListScreen() {
-    Screen3()
+    TodoListScreen()
 }
