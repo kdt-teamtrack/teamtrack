@@ -70,4 +70,16 @@ dependencies {
     implementation ("androidx.navigation:navigation-compose:2.7.7")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    implementation ("com.google.zxing:core:3.4.1")
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    // CameraX 라이브러리
+    val camerax_version = "1.3.4"
+    implementation ("androidx.camera:camera-core:$camerax_version")
+    implementation ("androidx.camera:camera-camera2:$camerax_version")
+    implementation ("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation ("androidx.camera:camera-view:$camerax_version")
+
+    implementation ("com.google.accompanist:accompanist-permissions:0.32.0")
+
 }
