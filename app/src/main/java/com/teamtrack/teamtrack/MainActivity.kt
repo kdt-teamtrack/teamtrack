@@ -78,18 +78,18 @@ fun MainScreen(navController: androidx.navigation.NavHostController) {
     }
 }
 
-@Composable
-fun Screen1() {
-    Text(
-        text = "This is Screen 1",
-        modifier = Modifier.fillMaxSize()
-    )
-}
+//@Composable
+//fun Screen1() {
+//    Text(
+//        text = "팀장의 메인 페이지",
+//        modifier = Modifier.fillMaxSize()
+//    )
+//}
 
 @Composable
 fun Screen2() {
     Text(
-        text = "This is Screen 2",
+        text = "2번 QR 스크린 ",
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -97,7 +97,7 @@ fun Screen2() {
 @Composable
 fun Screen3() {
     Text(
-        text = "This is Screen 3",
+        text = "3번팀원 Task",
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -105,7 +105,7 @@ fun Screen3() {
 @Composable
 fun Screen4() {
     Text(
-        text = "This is Screen 4",
+        text = "4번 회의 페이지",
         modifier = Modifier.fillMaxSize()
     )
 }
