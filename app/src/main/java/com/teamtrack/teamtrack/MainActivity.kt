@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                             ResultScreen(navController)
                         }
                         composable("screen3") { Screen3() }
-                        composable("screen4") { Screen4() }
+                        composable("screen4") { MeetingPage() }
                     }
                 }
             }
@@ -91,6 +91,15 @@ fun MainScreen(navController: androidx.navigation.NavHostController) {
         }
     }
 }
+
+
+//@Composable
+//fun Screen1() {
+//    Text(
+//        text = "팀장의 메인 페이지",
+//        modifier = Modifier.fillMaxSize()
+//    )
+//}
 
 @Composable
 fun Screen2() {
