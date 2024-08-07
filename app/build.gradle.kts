@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.compose") // Compose 컴파일러 플러그인 추가
 }
 
 android {
@@ -40,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.1" // 적절한 Kotlin Compose Compiler 버전 설정
     }
     packaging {
         resources {
@@ -85,11 +86,11 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.11.0")
 
     // Compose dependencies
-    implementation ("androidx.compose.ui:ui:1.3.0")
-    implementation ("androidx.compose.material3:material3:1.0.0-alpha10")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.3.0")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-alpha03")
-    implementation ("io.coil-kt:coil-compose:1.3.2")
+    implementation ("androidx.compose.ui:ui:1.6.8")
+    implementation ("androidx.compose.material3:material3:1.2.1")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.8")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
+    implementation ("io.coil-kt:coil-compose:2.7.0")
 
     //Serializaion
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
