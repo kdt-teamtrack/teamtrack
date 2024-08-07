@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,5 +82,12 @@ dependencies {
     implementation ("androidx.camera:camera-view:$camerax_version")
 
     implementation ("com.google.accompanist:accompanist-permissions:0.32.0")
+    implementation ("com.google.code.gson:gson:2.11.0")
 
+    // Compose dependencies
+    implementation ("androidx.compose.ui:ui:1.3.0")
+    implementation ("androidx.compose.material3:material3:1.0.0-alpha10")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.3.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-alpha03")
+    implementation ("io.coil-kt:coil-compose:1.3.2")
 }
