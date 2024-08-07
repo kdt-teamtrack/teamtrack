@@ -73,6 +73,7 @@ fun MeetingComponent(meeting: Meeting) {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewMeetingApp(){

@@ -90,4 +90,7 @@ dependencies {
     implementation ("androidx.compose.ui:ui-tooling-preview:1.3.0")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-alpha03")
     implementation ("io.coil-kt:coil-compose:1.3.2")
+
+    //Serializaion
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
 }
