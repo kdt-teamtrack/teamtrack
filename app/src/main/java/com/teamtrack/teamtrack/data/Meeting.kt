@@ -1,5 +1,8 @@
 package com.teamtrack.teamtrack.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Meeting(
     val id: Int,
     val meetingDate: String,

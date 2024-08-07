@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("org.jetbrains.kotlin.plugin.compose") // Compose 컴파일러 플러그인 추가
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.10" // Kotlin 직렬화 플러그인 추가
+
 }
 
 android {
