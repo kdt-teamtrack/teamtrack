@@ -4,17 +4,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -47,11 +61,43 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("screen3") { TodoListScreen() }
                         composable("screen4") { MeetingApp() }
+                        composable("calendarScreen") { CalendarScreen() }
                     }
                 }
             }
         }
     }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppBar() {
+    TopAppBar(
+        title = { Text(text = "teamtrack") },
+        navigationIcon = {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.minjee), // 프로필 사진 리소스 아이디
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "사용자 닉네임", fontSize = 16.sp) // 사용자 닉네임
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.White,
+            titleContentColor = Color.Black,
+            navigationIconContentColor = Color.Black
+        )
+    )
 }
 
 @Composable
@@ -87,31 +133,13 @@ fun MainScreen(navController: androidx.navigation.NavHostController) {
         ) {
             Text("회의록")
         }
+        Button(
+            onClick = { navController.navigate("calendarScreen") },
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text("달력 및 공지사항")
+        }
     }
 }
 
-
-//@Composable
-//fun Screen1() {
-//    Text(
-//        text = "팀장의 메인 페이지",
-//        modifier = Modifier.fillMaxSize()
-//    )
-//}
-
-@Composable
-fun Screen2() {
-    Text(
-        text = "2번 QR 스크린 ",
-        modifier = Modifier.fillMaxSize()
-    )
-}
-
-@Composable
-fun Screen4() {
-    Text(
-        text = "4번 회의 페이지",
-        modifier = Modifier.fillMaxSize()
-    )
-}
 
