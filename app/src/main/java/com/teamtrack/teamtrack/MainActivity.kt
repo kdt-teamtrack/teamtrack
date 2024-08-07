@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.teamtrack.teamtrack.attendance.AttendanceScreen
 import com.teamtrack.teamtrack.attendance.QRScreen
 import com.teamtrack.teamtrack.attendance.ResultScreen
+import com.teamtrack.teamtrack.calender.CalendarScreen
 import com.teamtrack.teamtrack.meetingUI.MeetingApp
 import com.teamtrack.teamtrack.teamLeaderPageUI.Screen1
 import com.teamtrack.teamtrack.ui.theme.MyApplicationTheme
