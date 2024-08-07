@@ -32,6 +32,7 @@ fun Screen3() {
             TodoItem(3, "할 일 3", false)
         )
     }
+
     memberTodo(todoItems = todoItems)
 }
 
@@ -107,7 +108,8 @@ fun DraggableCard(
                     },
                     onDragEnd = {
                         isDragging = false
-                        val toIndex = (index + (offsetY / itemHeightPx).roundToInt()).coerceIn(0, size - 1)
+                        val toIndex =
+                            (index + (offsetY / itemHeightPx).roundToInt()).coerceIn(0, size - 1)
                         onMove(index, toIndex)
                         offsetX = 0f
                         offsetY = 0f
