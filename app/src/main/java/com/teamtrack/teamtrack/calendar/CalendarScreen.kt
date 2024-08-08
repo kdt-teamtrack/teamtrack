@@ -1,4 +1,4 @@
-package com.teamtrack.teamtrack.calender
+package com.teamtrack.teamtrack.calendar
 
 import android.util.Log
 import androidx.compose.foundation.background

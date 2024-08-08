@@ -1,21 +1,16 @@
-package com.teamtrack.teamtrack.calender
+package com.teamtrack.teamtrack.calendar
 
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -112,53 +107,56 @@ fun CustomCalendar(
                         isSaturday -> pastelCyan
                         else -> pastelWhite
                     }
-                    if ((currentDay.dayOfWeek.value % 7) == i && currentDay <= lastDayOfMonth) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(100.dp)
-                                .padding(2.dp)
-                                .clickable { onDateLongPressed(currentDay) },
-                            contentAlignment = Alignment.Center
-                        ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(100.dp)
+                            .padding(2.dp)
+                            .clickable {
+                                if (currentDay <= lastDayOfMonth) onDateLongPressed(
+                                    currentDay
+                                )
+                            },
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                        if (currentDay.dayOfMonth <= lastDayOfMonth.dayOfMonth && (currentDay.dayOfWeek.value % 7) == i) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(4.dp)
+                                modifier = Modifier.fillMaxSize()
                             ) {
                                 Text(
                                     text = currentDay.dayOfMonth.toString(),
                                     fontSize = 10.sp,
                                     color = textColor
                                 )
+                                Spacer(modifier = Modifier.height(4.dp))
                                 meetingDates[currentDay]?.forEach { meeting ->
-                                    Log.d("CustomCalendar", "Meeting on $currentDay: $meeting") // 각 날짜의 미팅 로그 출력
+                                    Log.d(
+                                        "CustomCalendar",
+                                        "Meeting on $currentDay: $meeting"
+                                    ) // 각 날짜의 미팅 로그 출력
                                     Box(
                                         modifier = Modifier
+                                            .clip(RoundedCornerShape(4.dp))
                                             .background(highlightColor)
-                                            .padding(1.dp)
+                                            .padding(horizontal = 4.dp), // 상하단 패딩 조정
+                                        contentAlignment = Alignment.Center
                                     ) {
                                         Text(
                                             text = LocalDateTime.parse(
                                                 meeting.meetingDate,
                                                 DateTimeFormatter.ISO_DATE_TIME
                                             ).toLocalTime().toString(),
-                                            fontSize = 6.sp,
+                                            fontSize = 8.sp,
                                             textAlign = TextAlign.Center,
-                                            color = Color.Black
+                                            color = Color.Black,
+                                            modifier = Modifier.align(Alignment.Center)
                                         )
                                     }
                                 }
                             }
+                            currentDay = currentDay.plusDays(1)
                         }
-                        currentDay = currentDay.plusDays(1)
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(100.dp)
-                                .padding(2.dp)
-                                .background(Color.Black)
-                        ) {}
                     }
                 }
             }
