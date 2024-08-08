@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +34,7 @@ import coil.compose.rememberImagePainter
 
 //팀장의 메인 페이지
 @Composable
-fun Screen1(viewModel: TeamViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun TeamLeaderScreen(viewModel: TeamViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val users by viewModel.users.collectAsState(emptyList())
     val tasks by viewModel.tasks.collectAsState(emptyList())
 
@@ -90,5 +89,5 @@ fun TeamMemberCard(rank: String, name: String, task: String, profileImageUrl: St
 @Preview(showBackground = true)
 @Composable
 fun PreviewScreen1() {
-    Screen1()
+    TeamLeaderScreen()
 }

@@ -53,7 +53,7 @@ fun FirstScreen(navController: NavHostController) {
                 Image(
                     painter = painterResource(id = R.drawable.logo), // replace with your logo resource
                     contentDescription = null,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(60.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -82,7 +82,7 @@ fun FirstScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(
-                    onClick = { navController.navigate("screen1") },
+                    onClick = { navController.navigate("teamLeaderScreen") },
                     modifier = Modifier
                         .size(140.dp)
                         .clip(CircleShape)
@@ -105,7 +105,7 @@ fun FirstScreen(navController: NavHostController) {
                     }
                 }
                 Button(
-                    onClick = { navController.navigate("screen2") },
+                    onClick = { navController.navigate("attendanceScreen") },
                     modifier = Modifier
                         .size(140.dp)
                         .clip(CircleShape)

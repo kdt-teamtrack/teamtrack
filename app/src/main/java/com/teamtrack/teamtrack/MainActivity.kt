@@ -39,7 +39,7 @@ import com.teamtrack.teamtrack.attendance.QRScreen
 import com.teamtrack.teamtrack.attendance.ResultScreen
 import com.teamtrack.teamtrack.calendar.CalendarScreen
 import com.teamtrack.teamtrack.meetingUI.MeetingApp
-import com.teamtrack.teamtrack.teamLeaderPageUI.Screen1
+import com.teamtrack.teamtrack.teamLeaderPageUI.TeamLeaderScreen
 import com.teamtrack.teamtrack.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -67,14 +67,14 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("firstScreen") { FirstScreen(navController) }
                         composable("main") { MainScreen(navController) }
-                        composable("screen1") { Screen1() }
-                        composable("screen2") { AttendanceScreen(navController) }
+                        composable("teamLeaderScreen") { TeamLeaderScreen() }
+                        composable("attendanceScreen") { AttendanceScreen(navController) }
                         composable("qrScreen") { QRScreen(navController) }
                         composable("resultScreen/{result}") { backStackEntry ->
                             ResultScreen(navController)
                         }
-                        composable("screen3") { TodoListScreen() }
-                        composable("screen4") { MeetingApp() }
+                        composable("todoListScreen") { TodoListScreen() }
+                        composable("meetingApp") { MeetingApp() }
                         composable("calendarScreen") { CalendarScreen() }
                     }
                 }
@@ -123,25 +123,25 @@ fun MainScreen(navController: androidx.navigation.NavHostController) {
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = { navController.navigate("screen1") },
+            onClick = { navController.navigate("teamleaderScreen") },
             modifier = Modifier.padding(8.dp)
         ) {
             Text("팀장의 Main화면")
         }
         Button(
-            onClick = { navController.navigate("screen2") },
+            onClick = { navController.navigate("attendanceScreen") },
             modifier = Modifier.padding(8.dp)
         ) {
             Text("근태관리")
         }
         Button(
-            onClick = { navController.navigate("screen3") },
+            onClick = { navController.navigate("todoListScreen") },
             modifier = Modifier.padding(8.dp)
         ) {
             Text("팀원 업무관리")
         }
         Button(
-            onClick = { navController.navigate("screen4") },
+            onClick = { navController.navigate("meetingApp") },
             modifier = Modifier.padding(8.dp)
         ) {
             Text("회의록")

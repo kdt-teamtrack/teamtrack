@@ -1,6 +1,5 @@
 package com.teamtrack.teamtrack.meetingUI
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
