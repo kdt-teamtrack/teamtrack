@@ -1,7 +1,6 @@
 package com.teamtrack.teamtrack.meetingUI
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,11 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
-import java.util.Date
 
 data class Meeting(
     val date: LocalDate,
@@ -31,30 +28,26 @@ data class Meeting(
 
 @Composable
 fun MeetingApp() {
+    //TODO: 서버에서 미팅리스트 가져오기.
     var meetings by remember { mutableStateOf(listOf<Meeting>()) }
-    var showMeetingList by remember { mutableStateOf(false) }
-
-    if (showMeetingList) {
+    if (meetings.isNotEmpty()) {
         MeetingList(meetings)
     } else {
         MeetingPage(
             onMeetingCreated = { meeting ->
                 meetings = meetings + meeting
-                showMeetingList = true
             }
         )
     }
 }
 
 @Composable
-fun MeetingList(meetings:List<Meeting>){
+fun MeetingList(meetings: List<Meeting>) {
     LazyColumn {
         //Meeting 리스틑 넣기
-        items(meetings.sortedByDescending{it.date}){meeting->
+        items(meetings.sortedByDescending { it.date }) { meeting ->
             MeetingComponent(meeting)
-
         }
-
     }
 }
 
@@ -76,6 +69,6 @@ fun MeetingComponent(meeting: Meeting) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMeetingApp(){
+fun PreviewMeetingApp() {
     MeetingApp()
 }
