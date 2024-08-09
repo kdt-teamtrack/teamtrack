@@ -40,9 +40,20 @@ fun TeamLeaderScreen(viewModel: TeamViewModel = androidx.lifecycle.viewmodel.com
 
     LazyColumn {
         items(users) { user ->
-            val ongoingTasks = tasks.filter { it.assignedUser == user.userName && it.taskStatus == "진행" }
-            val taskNames = if (ongoingTasks.isNotEmpty()) ongoingTasks.joinToString(", ") { it.taskName } else "진행 중인 업무 없음"
-            TeamMemberCard(rank = user.rank, name = user.userName, task = taskNames, profileImageUrl = user.profileImageUrl)
+            val ongoingTasks =
+                tasks.filter { it.assignedUser == user.userName && it.taskStatus == "진행" }
+            val taskNames = if (ongoingTasks.isNotEmpty()) {
+                ongoingTasks.joinToString(", ") { it.taskName }
+            } else {
+                "진행 중인 업무 없음"
+            }
+
+            TeamMemberCard(
+                rank = user.rank,
+                name = user.userName,
+                task = taskNames,
+                profileImageUrl = user.profileImageUrl,
+            )
         }
     }
 }
@@ -86,6 +97,7 @@ fun TeamMemberCard(rank: String, name: String, task: String, profileImageUrl: St
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewScreen1() {
