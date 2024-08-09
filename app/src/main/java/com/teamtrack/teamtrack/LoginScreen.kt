@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun FirstScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +105,7 @@ fun FirstScreen(navController: NavHostController) {
                     }
                 }
                 Button(
-                    onClick = { navController.navigate("attendanceScreen") },
+                    onClick = { navController.navigate("homeScreen") },
                     modifier = Modifier
                         .size(140.dp)
                         .clip(CircleShape)
