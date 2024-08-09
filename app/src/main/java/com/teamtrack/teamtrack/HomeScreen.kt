@@ -3,6 +3,7 @@ package com.teamtrack.teamtrack
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -39,150 +40,128 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController)
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxHeight()
+    Column(
+        modifier = Modifier
+            .background(Color.White)
+            .padding(16.dp)
+            .fillMaxHeight()
+    ) {
+        // Welcome Section with smaller text
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // Welcome Section with smaller text
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column {
-                    Text(
-                        text = "Welcome",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "Bill Gates", // Replace with dynamic content later
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Image(
-                    painter = painterResource(id = R.drawable.minjee), // replace with your profile image resource
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+            Column {
+                Text(
+                    text = "Welcome",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black
+                )
+                Text(
+                    text = "Bill Gates", // Replace with dynamic content later
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
+            Image(
+                painter = painterResource(id = R.drawable.minjee), // replace with your profile image resource
+                contentDescription = null,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-            // Date Section
+        // Date Section
+        Text(
+            text = "2024.01.10",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Tasks Section as Card
+        InfoCard(
+            title = "TODAY JUST DO IT",
+            content = {
+                Text(text = "○ 오늘의 할 일", fontSize = 18.sp, color = Color.Black)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Check In and Out Section as Card
+        InfoCard(
+            title = "CHECK IN AND OUT",
+            content = {
+                Text(
+                    text = "출근 시간: 08:48 2024.01.10 (월)",
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "퇴근 시간: 06:25 2024.01.10 (월)",
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Schedule Section as Card
+        InfoCard(
+            title = "TODAY SCHEDULE",
+            content = {
+                Text(text = "| 팀국이랑 미팅 10:00 ~ 11:00", fontSize = 18.sp, color = Color.Black)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "| 일론이랑 식사 13:00 ~ 14:00", fontSize = 18.sp, color = Color.Black)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // The rest of your content goes here...
+
+    }
+}
+
+@Composable
+fun InfoCard(
+    title: String,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF1F1F1))
+                .padding(16.dp)
+        ) {
             Text(
-                text = "2024.01.10",
-                fontSize = 24.sp,
+                text = title,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Tasks Section as Card
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(vertical = 8.dp),
-                shape = RoundedCornerShape(8.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF1F1F1))
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "TODAY JUST DO IT",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "○ 오늘의 할 일", fontSize = 18.sp, color = Color.Black)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Check In and Out Section as Card
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(vertical = 8.dp),
-                shape = RoundedCornerShape(8.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF1F1F1))
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "CHECK IN AND OUT",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "출근 시간: 08:48 2024.01.10 (월)", fontSize = 18.sp, color = Color.Black)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "퇴근 시간: 06:25 2024.01.10 (월)", fontSize = 18.sp, color = Color.Black)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Schedule Section as Card
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(vertical = 8.dp),
-                shape = RoundedCornerShape(8.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF1F1F1))
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "TODAY SCHEDULE",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "| 팀국이랑 미팅 10:00 ~ 11:00", fontSize = 18.sp, color = Color.Black)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "| 일론이랑 식사 13:00 ~ 14:00", fontSize = 18.sp, color = Color.Black)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // The rest of your content goes here...
-
+            Spacer(modifier = Modifier.height(8.dp))
+            content()
         }
     }
 }
@@ -193,12 +172,17 @@ fun BottomNavigationBar(navController: NavHostController) {
         BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen"),
         BottomNavItem("Schedule", iconVector = Icons.Filled.DateRange, route = "calendarScreen"),
         BottomNavItem("Meeting", iconVector = Icons.Filled.Person, route = "meetingApp"),
-        BottomNavItem("QR", iconPainter = painterResource(R.drawable.qr_icon), route = "attendanceScreen") // Using Painter for custom icon
+        BottomNavItem(
+            "QR",
+            iconPainter = painterResource(R.drawable.qr_icon),
+            route = "attendanceScreen"
+        ) // Using Painter for custom icon
     )
 
     NavigationBar(
         modifier = Modifier
-            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)), // Rounded top corners
+            .background(Color.White)
+            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)), // Rounded top corner
         containerColor = Color(0xFFF1F1F1),
         contentColor = Color.Black
     ) {
@@ -224,4 +208,10 @@ fun BottomNavigationBar(navController: NavHostController) {
         }
     }
 }
-data class BottomNavItem(val label: String, val iconVector: ImageVector? = null, val iconPainter: Painter? = null, val route: String)
+
+data class BottomNavItem(
+    val label: String,
+    val iconVector: ImageVector? = null,
+    val iconPainter: Painter? = null,
+    val route: String
+)
