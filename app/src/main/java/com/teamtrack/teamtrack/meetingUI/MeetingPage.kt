@@ -22,7 +22,7 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeetingPage(onMeetingCreated: (Meeting) -> Unit) {
+fun NewMeetingPage(onMeetingCreated: (Meeting) -> Unit) {
     // 상태 변수들을 정의합니다. remember를 사용하여 재구성 시 상태를 유지합니다.
     var date by remember { mutableStateOf(LocalDate.now()) } // 현재 날짜로 초기화
     var agenda by remember { mutableStateOf("") } // 빈 문자열로 초기화
@@ -155,7 +155,7 @@ fun DropdownAttendees(selectedAttendees: Set<String>, onClickAttendees: (String)
 @Preview(showBackground = true)
 @Composable
 fun PreviewMeetingPage() {
-    MeetingPage {
+    NewMeetingPage {
 
     }
 }

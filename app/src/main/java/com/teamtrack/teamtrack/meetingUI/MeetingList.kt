@@ -33,7 +33,7 @@ fun MeetingApp() {
     if (meetings.isNotEmpty()) {
         MeetingList(meetings)
     } else {
-        MeetingPage(
+        NewMeetingPage(
             onMeetingCreated = { meeting ->
                 meetings = meetings + meeting
             }
