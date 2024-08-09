@@ -2,55 +2,80 @@ package com.teamtrack.teamtrack
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = {
+            BottomNavigationBar(navController)
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .background(Color.White)
                 .padding(innerPadding)
                 .padding(16.dp)
+                .fillMaxHeight()
         ) {
-            // Welcome Section
+            // Welcome Section with smaller text
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "Welcome,\nBill Gates",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
+                Column {
+                    Text(
+                        text = "Welcome",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "Bill Gates", // Replace with dynamic content later
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 Image(
                     painter = painterResource(id = R.drawable.minjee), // replace with your profile image resource
                     contentDescription = null,
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(120.dp)
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
@@ -68,14 +93,21 @@ fun HomeScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Tasks Section
-            Box(
+            // Tasks Section as Card
+            Card(
                 modifier = Modifier
-                    .background(Color(0xFFF1F1F1))
-                    .padding(16.dp)
                     .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFFF1F1F1))
+                        .padding(16.dp)
+                ) {
                     Text(
                         text = "TODAY JUST DO IT",
                         fontSize = 16.sp,
@@ -89,14 +121,21 @@ fun HomeScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Check In and Out Section
-            Box(
+            // Check In and Out Section as Card
+            Card(
                 modifier = Modifier
-                    .background(Color(0xFFF1F1F1))
-                    .padding(16.dp)
                     .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFFF1F1F1))
+                        .padding(16.dp)
+                ) {
                     Text(
                         text = "CHECK IN AND OUT",
                         fontSize = 16.sp,
@@ -112,14 +151,21 @@ fun HomeScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Schedule Section
-            Box(
+            // Schedule Section as Card
+            Card(
                 modifier = Modifier
-                    .background(Color(0xFFF1F1F1))
-                    .padding(16.dp)
                     .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFFF1F1F1))
+                        .padding(16.dp)
+                ) {
                     Text(
                         text = "TODAY SCHEDULE",
                         fontSize = 16.sp,
@@ -144,19 +190,31 @@ fun HomeScreen(navController: NavHostController) {
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(
-        BottomNavItem("Home", Icons.Filled.Home, "homeScreen"),
-        BottomNavItem("Schedule", Icons.Filled.DateRange, "scheduleScreen"), // 아이콘 변경
-        BottomNavItem("Meeting", Icons.Filled.Person, "meetingScreen"),
-        BottomNavItem("Task", Icons.AutoMirrored.Filled.List, "taskScreen")
+        BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen"),
+        BottomNavItem("Schedule", iconVector = Icons.Filled.DateRange, route = "calendarScreen"),
+        BottomNavItem("Meeting", iconVector = Icons.Filled.Person, route = "meetingApp"),
+        BottomNavItem("QR", iconPainter = painterResource(R.drawable.qr_icon), route = "attendanceScreen") // Using Painter for custom icon
     )
 
     NavigationBar(
-        containerColor = Color.White,
+        modifier = Modifier
+            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)), // Rounded top corners
+        containerColor = Color(0xFFF1F1F1),
         contentColor = Color.Black
     ) {
         items.forEach { item ->
             NavigationBarItem(
-                icon = { Icon(item.icon, contentDescription = item.label) },
+                icon = {
+                    if (item.iconVector != null) {
+                        Icon(imageVector = item.iconVector, contentDescription = item.label)
+                    } else if (item.iconPainter != null) {
+                        Icon(
+                            painter = item.iconPainter,
+                            contentDescription = item.label,
+                            modifier = Modifier.size(24.dp) // Adjust the size to match other icons
+                        )
+                    }
+                },
                 label = { Text(item.label, color = Color.Black) },
                 selected = false,
                 onClick = {
@@ -166,5 +224,4 @@ fun BottomNavigationBar(navController: NavHostController) {
         }
     }
 }
-
-data class BottomNavItem(val label: String, val icon: ImageVector, val route: String)
+data class BottomNavItem(val label: String, val iconVector: ImageVector? = null, val iconPainter: Painter? = null, val route: String)
