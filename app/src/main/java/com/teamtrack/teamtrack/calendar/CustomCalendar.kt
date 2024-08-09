@@ -29,7 +29,7 @@ fun CustomCalendar(
 ) {
     val firstDayOfMonth = currentMonth.atDay(1)
     val lastDayOfMonth = currentMonth.atEndOfMonth()
-    val daysOfWeek = listOf("일", "월", "화", "수", "목", "금", "토")
+    val daysOfWeek = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
     val meetingDates = meetings.groupBy {
         LocalDateTime.parse(it.meetingDate, DateTimeFormatter.ISO_DATE_TIME).toLocalDate()
@@ -59,19 +59,19 @@ fun CustomCalendar(
     )
 
     val pastelRed = Color(0xFFFF8080) // Darker pastel red
-    val pastelCyan = Color(0xFFC1FFFF)
-    val pastelWhite = Color(0xFFF0F0F0)
+    val pastelCyan = Color(0xFF2196F3)
+    val pastelBlack = Color(0xFF303030) // 연한 검정색
     val highlightColor = Color(0xFFFFB74D)
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Black)
+            .background(Color.White)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Black),
+                .background(Color.White),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             for (day in daysOfWeek) {
@@ -95,7 +95,7 @@ fun CustomCalendar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 2.dp)
-                    .background(Color.Black),
+                    .background(Color.White),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 for (i in 0..6) {
@@ -105,7 +105,7 @@ fun CustomCalendar(
                     val textColor = when {
                         isSunday || isHoliday -> pastelRed
                         isSaturday -> pastelCyan
-                        else -> pastelWhite
+                        else -> pastelBlack
                     }
                     Box(
                         modifier = Modifier
@@ -149,7 +149,7 @@ fun CustomCalendar(
                                             ).toLocalTime().toString(),
                                             fontSize = 8.sp,
                                             textAlign = TextAlign.Center,
-                                            color = Color.Black,
+                                            color = Color.White,
                                             modifier = Modifier.align(Alignment.Center)
                                         )
                                     }

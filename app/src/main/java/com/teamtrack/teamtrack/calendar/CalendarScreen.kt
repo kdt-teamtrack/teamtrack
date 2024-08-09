@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,11 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.teamtrack.teamtrack.R
 import com.teamtrack.teamtrack.data.Meeting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -56,9 +61,9 @@ fun CalendarScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(Color.White)
     ) {
-        // 달 이동 버튼
+        // Header with month and navigation arrows
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,70 +71,85 @@ fun CalendarScreen() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = { currentMonth = currentMonth.minusMonths(1) }) {
-                Text("이전 달", fontSize = 12.sp)
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_chevron_left_24),
+                    contentDescription = "Previous Month"
+                )
             }
-            Text(
-                text = "${
-                    currentMonth.month.getDisplayName(
-                        TextStyle.FULL, Locale.getDefault()
-                    )
-                } ${currentMonth.year}",
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, // 중앙 정렬
+                modifier = Modifier.weight(1f) // weight를 사용하여 중앙에 배치
+            ) {
+                Text(
+                    text = currentMonth.month.getDisplayName(
+                        TextStyle.FULL, Locale.ENGLISH  // Locale을 영어로 설정
+                    ),
+                    fontSize = 24.sp, // 더 큰 글씨 크기
+                    textAlign = TextAlign.Center,
+                    color = Color.Black
+                )
+                Text(
+                    text = currentMonth.year.toString(),
+                    fontSize = 16.sp, // 더 작은 글씨 크기
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray // 회색으로 설정
+                )
+            }
             Button(onClick = { currentMonth = currentMonth.plusMonths(1) }) {
-                Text("다음 달", fontSize = 12.sp)
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_chevron_right_24),
+                    contentDescription = "Next Month"
+                )
             }
         }
 
-        // 달력 및 공지사항 부분
+        // Calendar display with dots indicating events
         LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
             item {
                 CustomCalendar(
-                    currentMonth = currentMonth,
-                    onDateLongPressed = {
+                    currentMonth = currentMonth, onDateLongPressed = {
                         selectedDate = it
                         showPopup = true
-                    },
-                    meetings = meetings
+                    }, meetings = meetings
                 )
             }
 
-            // 공지사항 부분
-            item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = "공지사항 1", modifier = Modifier.padding(16.dp), fontSize = 12.sp
-                    )
+            // Events list for the selected day
+            selectedDate?.let { date ->
+                items(meetings.filter { it.meetingDate == date.toString() }) { meeting ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = "${meeting.meetingDate} - ${meeting.agenda}",
+                            modifier = Modifier.padding(16.dp),
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         }
 
         if (showPopup && selectedDate != null) {
             AlertDialog(onDismissRequest = { showPopup = false },
-                title = { Text("달력 팝업", fontSize = 14.sp) },
+                title = { Text("Event Details", fontSize = 14.sp) },
                 text = {
                     val selectedMeeting = meetings.firstOrNull {
                         LocalDate.parse(
-                            it.meetingDate,
-                            DateTimeFormatter.ISO_DATE_TIME
+                            it.meetingDate, DateTimeFormatter.ISO_DATE_TIME
                         ) == selectedDate
                     }
                     Text(
-                        text = "선택한 날짜: ${selectedDate.toString()}\n" +
-                                "회의 내용: ${selectedMeeting?.content ?: "회의 없음"}",
+                        text = "Selected Date: ${selectedDate.toString()}\n" + "Meeting Content: ${selectedMeeting?.content ?: "No meeting"}",
                         fontSize = 12.sp
                     )
                 },
                 confirmButton = {
                     Button(onClick = { showPopup = false }) {
-                        Text("닫기", fontSize = 12.sp)
+                        Text("Close", fontSize = 12.sp)
                     }
                 })
         }
@@ -153,7 +173,9 @@ suspend fun fetchMeetingData(url: String): List<Meeting> {
                 Json.decodeFromString<List<Meeting>>(jsonString)
             } else {
                 connection.disconnect()
-                Log.e("fetchMeetingData", "Failed to fetch data: ${connection.responseCode}")
+                Log.e(
+                    "fetchMeetingData", "Failed to fetch data: ${connection.responseCode}"
+                )
                 emptyList()
             }
         } catch (e: Exception) {
