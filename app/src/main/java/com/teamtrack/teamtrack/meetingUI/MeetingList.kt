@@ -16,18 +16,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import java.time.LocalDate
-
-data class Meeting(
-    val date: LocalDate,
-    val agenda: String,
-    val attendees: Set<String>,
-    val summary: String,
-    val conclusion: String
-)
+import com.teamtrack.teamtrack.data.Meeting
 
 @Composable
-fun MeetingApp() {
+fun MeetingAppScreen() {
     //TODO: 서버에서 미팅리스트 가져오기.
     var meetings by remember { mutableStateOf(listOf<Meeting>()) }
     if (meetings.isNotEmpty()) {
@@ -45,7 +37,7 @@ fun MeetingApp() {
 fun MeetingList(meetings: List<Meeting>) {
     LazyColumn {
         //Meeting 리스틑 넣기
-        items(meetings.sortedByDescending { it.date }) { meeting ->
+        items(meetings.sortedByDescending { it.meetingDate }) { meeting ->
             MeetingComponent(meeting)
         }
     }
@@ -60,15 +52,23 @@ fun MeetingComponent(meeting: Meeting) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "날짜: ${meeting.date}")
+            Text(text = "날짜: ${meeting.meetingDate}")
             Text(text = "주제: ${meeting.agenda}")
-            Text(text = "결론: ${meeting.conclusion}")
+            Text(text = "요약: ${meeting.summary}")
+            Text(text = "결론: ${meeting.content}")
+            Text(text = "참석자: ${meeting.attendees}")
+            Text(text = "작성일: ${meeting.createdAt}")
+            Text(text = "수정일: ${meeting.updatedAt}")
+            // 내용이 보이는 경우만 표시
+            if (meeting.isContentVisible) {
+                Text(text = "내용: ${meeting.content}")
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewMeetingApp() {
-    MeetingApp()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewMeetingApp() {
+//    MeetingApp()
+//}

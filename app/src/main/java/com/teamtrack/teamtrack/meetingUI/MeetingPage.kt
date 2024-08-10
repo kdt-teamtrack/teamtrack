@@ -17,7 +17,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.ui.focus.onFocusChanged
+import com.teamtrack.teamtrack.data.Meeting
+import kotlinx.serialization.json.JsonNull.content
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +98,18 @@ fun NewMeetingPage(onMeetingCreated: (Meeting) -> Unit) {
         )
         Button(
             onClick = {
-                val meeting = Meeting(date, agenda, selectedAttendees, summary, conclusion)
+                // Meeting 객체 생성
+                val meeting = Meeting(
+                    id = UUID.randomUUID().hashCode(), // 고유한 ID 생성
+                    meetingDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                    agenda = agenda,
+                    content = content,
+                    summary = summary,
+                    attendees = selectedAttendees.joinToString(", "),
+                    isContentVisible = true,
+                    createdAt = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
+                    updatedAt = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                )
                 onMeetingCreated(meeting)
             },
             modifier = Modifier
@@ -152,10 +167,10 @@ fun DropdownAttendees(selectedAttendees: Set<String>, onClickAttendees: (String)
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewMeetingPage() {
-    NewMeetingPage {
-
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewMeetingPage() {
+//    NewMeetingPage {
+//
+//    }
+//}
