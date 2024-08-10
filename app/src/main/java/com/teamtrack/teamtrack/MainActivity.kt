@@ -18,6 +18,8 @@ import com.teamtrack.teamtrack.attendance.QRScreen
 import com.teamtrack.teamtrack.attendance.ResultScreen
 import com.teamtrack.teamtrack.calendar.CalendarScreen
 import com.teamtrack.teamtrack.meetingUI.MeetingAppScreen
+import com.teamtrack.teamtrack.project.CreateProjectScreen
+import com.teamtrack.teamtrack.project.ProjectScreen
 import com.teamtrack.teamtrack.teamLeaderPageUI.TeamLeaderScreen
 import com.teamtrack.teamtrack.ui.theme.MyApplicationTheme
 
@@ -57,6 +59,8 @@ class MainActivity : ComponentActivity() {
                         composable("todoListScreen") { TodoListScreen() }
                         composable("meetingApp") { MeetingAppScreen() }
                         composable("calendarScreen") { CalendarScreen() }
+                        composable("projectScreen") { ProjectScreen(navController) }
+                        composable("createProjectScreen") { CreateProjectScreen(navController) }
                     }
                 }
             }
