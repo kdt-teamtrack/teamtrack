@@ -112,218 +112,64 @@ fun LoginScreen(navController: NavHostController) {
             }
         }
 
-    // Middle Section
-    Box(modifier = Modifier.weight(.5f)) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            val colors = listOf(Color.Black, Color.White, Color.Black, Color.White)
-            val rows = 2
+        // Middle Section
+        Box(modifier = Modifier.weight(.5f)) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                val colors = listOf(Color.Black, Color.White, Color.Black, Color.White)
+                val rows = 2
 
-            for (rowIndex in 0 until rows) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    val currentColors = if (rowIndex % 2 == 0) colors else colors.reversed()
+                for (rowIndex in 0 until rows) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        val currentColors = if (rowIndex % 2 == 0) colors else colors.reversed()
 
-                    currentColors.forEach { color ->
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .background(color = color)
-                                .height(100.dp)
-                        )
+                        currentColors.forEach { color ->
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .background(color = color)
+                                    .height(100.dp)
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
-    // Bottom Section
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column {
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(
-                    onClick = { navController.navigate("teamLeaderScreen") },
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF33ADFF))
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.minjee), // replace with your image resource
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(60.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("팀장", fontSize = 18.sp, color = Color.White)
-                    }
-                }
+        // Bottom Section
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column {
                 Button(
                     onClick = { navController.navigate("homeScreen") },
                     modifier = Modifier
-                        .size(140.dp)
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .height(50.dp)
                         .clip(CircleShape)
                         .background(Color(0xFF33ADFF))
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.heayen), // replace with your image resource
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(60.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("팀원", fontSize = 18.sp, color = Color.Black)
-                    }
+                    Text(
+                        text = "로그인",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 }
-            }
-            Button(
-                onClick = { /* Navigate to sign-up screen */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Text("회원이 아니신가요? 회원가입", fontSize = 16.sp, color = Color.Black)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { /* Navigate to sign-up screen */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text("회원이 아니신가요? 회원가입", fontSize = 16.sp, color = Color.Black)
+                }
             }
         }
     }
 }
-}
-
-//@Composable
-//fun LoginScreen(navController: NavHostController) {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Brush.verticalGradient(listOf(Color(0xFFE3F2FD), Color(0xFFBBDEFB))))
-//            .padding(16.dp)
-//    ) {
-//        // Top Section
-//        Box(
-//            modifier = Modifier
-//                .weight(1f)
-//                .fillMaxWidth()
-//                .background(Color.White, CircleShape)
-//                .padding(16.dp),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.logo), // replace with your logo resource
-//                    contentDescription = null,
-//                    modifier = Modifier.size(60.dp)
-//                )
-//                Spacer(modifier = Modifier.width(8.dp))
-//                Text(
-//                    text = "Team Track",
-//                    fontSize = 28.sp,
-//                    fontWeight = FontWeight.Bold,
-//                    textAlign = TextAlign.Center,
-//                    color = Color.Black
-//                )
-//            }
-//        }
-//
-//        Spacer(modifier = Modifier.height(16.dp))
-//
-//        // Middle Section
-//        Box(
-//            modifier = Modifier
-//                .weight(3f)
-//                .fillMaxWidth()
-//                .background(Color.White, CircleShape)
-//                .padding(16.dp),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Row(
-//                horizontalArrangement = Arrangement.SpaceEvenly,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Button(
-//                    onClick = { navController.navigate("teamLeaderScreen") },
-//                    modifier = Modifier
-//                        .size(140.dp)
-//                        .clip(CircleShape)
-//                        .background(Brush.linearGradient(listOf(Color(0xFF64B5F6), Color(0xFF1E88E5))))
-//                ) {
-//                    Column(
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        verticalArrangement = Arrangement.Center
-//                    ) {
-//                        Image(
-//                            painter = painterResource(id = R.drawable.minjee), // replace with your image resource
-//                            contentDescription = null,
-//                            modifier = Modifier
-//                                .size(60.dp)
-//                                .clip(CircleShape),
-//                            contentScale = ContentScale.Crop
-//                        )
-//                        Spacer(modifier = Modifier.height(8.dp))
-//                        Text("팀장", fontSize = 18.sp, color = Color.White)
-//                    }
-//                }
-//                Button(
-//                    onClick = { navController.navigate("homeScreen") },
-//                    modifier = Modifier
-//                        .size(140.dp)
-//                        .clip(CircleShape)
-//                        .background(Brush.linearGradient(listOf(Color(0xFF64B5F6), Color(0xFF1E88E5))))
-//                ) {
-//                    Column(
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        verticalArrangement = Arrangement.Center
-//                    ) {
-//                        Image(
-//                            painter = painterResource(id = R.drawable.heayen), // replace with your image resource
-//                            contentDescription = null,
-//                            modifier = Modifier
-//                                .size(60.dp)
-//                                .clip(CircleShape),
-//                            contentScale = ContentScale.Crop
-//                        )
-//                        Spacer(modifier = Modifier.height(8.dp))
-//                        Text("팀원", fontSize = 18.sp, color = Color.White)
-//                    }
-//                }
-//            }
-//        }
-//
-//        Spacer(modifier = Modifier.height(16.dp))
-//
-//        // Bottom Section
-//        Box(
-//            modifier = Modifier
-//                .weight(1f)
-//                .fillMaxWidth()
-//                .background(Color.White, CircleShape)
-//                .padding(16.dp),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Button(
-//                onClick = { /* Navigate to sign-up screen */ },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = 16.dp)
-//            ) {
-//                Text("회원이 아니신가요? 회원가입", fontSize = 16.sp, color = Color.Black)
-//            }
-//        }
-//    }
-//}

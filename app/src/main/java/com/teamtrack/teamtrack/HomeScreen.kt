@@ -2,15 +2,16 @@ package com.teamtrack.teamtrack
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,7 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,108 +40,121 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .background(Color.White)
             .padding(16.dp)
-            .fillMaxHeight()
+            .fillMaxWidth()
     ) {
-        // Welcome Section with smaller text
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column {
-                Text(
-                    text = "Welcome",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black
-                )
-                Text(
-                    text = "Bill Gates", // Replace with dynamic content later
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Image(
-                painter = painterResource(id = R.drawable.minjee), // replace with your profile image resource
-                contentDescription = null,
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Date Section
-        Text(
-            text = "2024.01.10",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Tasks Section as Card
-        InfoCard(
-            title = "TODAY JUST DO IT",
-            content = {
-                Text(text = "○ 오늘의 할 일", fontSize = 18.sp, color = Color.Black)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Check In and Out Section as Card
-        InfoCard(
-            title = "CHECK IN AND OUT",
-            content = {
-                Text(
-                    text = "출근 시간: 08:48 2024.01.10 (월)",
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "퇴근 시간: 06:25 2024.01.10 (월)",
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
-            }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Schedule Section as Card
-        InfoCard(
-            title = "TODAY SCHEDULE",
-            content = {
-                Text(text = "| 팀국이랑 미팅 10:00 ~ 11:00", fontSize = 18.sp, color = Color.Black)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "| 일론이랑 식사 13:00 ~ 14:00", fontSize = 18.sp, color = Color.Black)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // The rest of your content goes here...
-
+        item { WelcomeSection() }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { DateSection() }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { ParticipatingProjectsCard(navController) }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { MyTasksCard(navController) }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { CheckInOutCard() }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { TodayScheduleCard() }
     }
+}
+
+@Composable
+fun WelcomeSection() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column {
+            Text(text = "Welcome", fontSize = 12.sp, fontWeight = FontWeight.Normal, color = Color.Black)
+            Text(text = "Bill Gates", fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Image(
+            painter = painterResource(id = R.drawable.minjee), // Replace with your profile image resource
+            contentDescription = null,
+            modifier = Modifier
+                .size(120.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
+fun DateSection() {
+    Text(text = "2024.01.10", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+}
+
+@Composable
+fun ParticipatingProjectsCard(navController: NavHostController) {
+    InfoCard(
+        title = "내가 참여 중인 프로젝트",
+        modifier = Modifier.clickable { navController.navigate("projectScreen") }
+    ) {
+        ProjectRow(name = "Project A", role = "팀장", iconId = R.drawable.ic_leader)
+        Spacer(modifier = Modifier.height(4.dp))
+        ProjectRow(name = "Project B", role = "팀원", iconId = R.drawable.ic_group)
+    }
+}
+
+@Composable
+fun MyTasksCard(navController: NavHostController) {
+    InfoCard(
+        title = "내 작업",
+        modifier = Modifier.clickable { navController.navigate("myTasksScreen") }
+    ) {
+        TaskRow(task = "API 통합 작업", status = "진행 중")
+        Spacer(modifier = Modifier.height(4.dp))
+        TaskRow(task = "UI 디자인 최종화", status = "대기 중")
+    }
+}
+
+@Composable
+fun CheckInOutCard() {
+    InfoCard(title = "CHECK IN AND OUT") {
+        Text(text = "출근 시간: 08:48 2024.01.10 (월)", fontSize = 18.sp, color = Color.Black)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = "퇴근 시간: 06:25 2024.01.10 (월)", fontSize = 18.sp, color = Color.Black)
+    }
+}
+
+@Composable
+fun TodayScheduleCard() {
+    InfoCard(title = "TODAY SCHEDULE") {
+        Text(text = "| 팀국이랑 미팅 10:00 ~ 11:00", fontSize = 18.sp, color = Color.Black)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = "| 일론이랑 식사 13:00 ~ 14:00", fontSize = 18.sp, color = Color.Black)
+    }
+}
+
+@Composable
+fun ProjectRow(name: String, role: String, iconId: Int) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(text = "$name: $role", fontSize = 18.sp, color = Color.Black)
+        Spacer(modifier = Modifier.weight(1f))
+        Image(
+            painter = painterResource(id = iconId),
+            contentDescription = role,
+            modifier = Modifier.size(18.dp)
+        )
+    }
+}
+
+@Composable
+fun TaskRow(task: String, status: String) {
+    Text(text = "○ $task - $status", fontSize = 18.sp, color = Color.Black)
 }
 
 @Composable
 fun InfoCard(
     title: String,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
             .padding(vertical = 8.dp),
@@ -154,12 +167,7 @@ fun InfoCard(
                 .background(Color(0xFFF1F1F1))
                 .padding(16.dp)
         ) {
-            Text(
-                text = title,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+            Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black)
             Spacer(modifier = Modifier.height(8.dp))
             content()
         }
@@ -172,17 +180,13 @@ fun BottomNavigationBar(navController: NavHostController) {
         BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen"),
         BottomNavItem("Schedule", iconVector = Icons.Filled.DateRange, route = "calendarScreen"),
         BottomNavItem("Meeting", iconVector = Icons.Filled.Person, route = "meetingApp"),
-        BottomNavItem(
-            "QR",
-            iconPainter = painterResource(R.drawable.qr_icon),
-            route = "attendanceScreen"
-        ) // Using Painter for custom icon
+        BottomNavItem("QR", iconPainter = painterResource(R.drawable.qr_icon), route = "attendanceScreen")
     )
 
     NavigationBar(
         modifier = Modifier
             .background(Color.White)
-            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)), // Rounded top corner
+            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
         containerColor = Color(0xFFF1F1F1),
         contentColor = Color.Black
     ) {
@@ -195,15 +199,13 @@ fun BottomNavigationBar(navController: NavHostController) {
                         Icon(
                             painter = item.iconPainter,
                             contentDescription = item.label,
-                            modifier = Modifier.size(24.dp) // Adjust the size to match other icons
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 },
                 label = { Text(item.label, color = Color.Black) },
                 selected = false,
-                onClick = {
-                    navController.navigate(item.route)
-                }
+                onClick = { navController.navigate(item.route) }
             )
         }
     }
