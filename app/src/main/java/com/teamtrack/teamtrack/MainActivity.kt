@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,11 +20,17 @@ import com.teamtrack.teamtrack.attendance.ResultScreen
 import com.teamtrack.teamtrack.calendar.CalendarScreen
 import com.teamtrack.teamtrack.meetingUI.MeetingAppScreen
 import com.teamtrack.teamtrack.project.CreateProjectScreen
-import com.teamtrack.teamtrack.project.ProjectScreen
+import com.teamtrack.teamtrack.project.ProjectSelectionScreen
+import com.teamtrack.teamtrack.tasks.TaskDetailScreen
+import com.teamtrack.teamtrack.tasks.TaskScreen
 import com.teamtrack.teamtrack.teamLeaderPageUI.TeamLeaderScreen
 import com.teamtrack.teamtrack.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val selectedProjectId = mutableStateOf<String?>(null)
+    private val isTeamLeader = mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,31 +46,69 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         if (currentRoute != "loginScreen") {
-                            BottomNavigationBar(navController)
+                            BottomNavigationBar(navController, isTeamLeader.value)
                         }
                     }
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "loginScreen",
+                        startDestination = "loginScreen",  // 프로젝트 선택 화면으로 시작
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("loginScreen") { LoginScreen(navController) }
-                        composable("homeScreen") { HomeScreen(navController) }
-                        composable("teamLeaderScreen") { TeamLeaderScreen() }
+                        composable("projectSelectionScreen") {
+                            ProjectSelectionScreen(
+                                navController,
+                                onProjectSelected = { project ->
+                                    selectedProjectId.value = project.name
+                                    isTeamLeader.value = project.role == "Team Leader"
+                                    navController.navigate("homeScreen/${isTeamLeader.value}")
+                                }
+                            )
+                        }
+                        composable("homeScreen/{isTeamLeader}") { backStackEntry ->
+                            val isTeamLeader =
+                                backStackEntry.arguments?.getString("isTeamLeader")?.toBoolean()
+                                    ?: false
+                            HomeScreen(navController, isTeamLeader)
+                        }
+                        composable("teamLeaderScreen") {
+                            if (isTeamLeader.value) {
+                                TeamLeaderScreen()
+                            } else {
+                                LoginScreen(navController)
+                            }
+                        }
                         composable("attendanceScreen") { AttendanceScreen(navController) }
                         composable("qrScreen") { QRScreen(navController) }
                         composable("resultScreen/{result}") {
                             ResultScreen(navController)
                         }
-                        composable("todoListScreen") { TodoListScreen() }
-                        composable("meetingApp") { MeetingAppScreen() }
+                        composable("todoListScreen") {
+                            TodoListScreen()
+                        }
+                        composable("meetingApp") {
+                            MeetingAppScreen()
+                        }
                         composable("calendarScreen") { CalendarScreen() }
-                        composable("projectScreen") { ProjectScreen(navController) }
-                        composable("createProjectScreen") { CreateProjectScreen(navController) }
+                        composable("createProjectScreen") {
+                                CreateProjectScreen(navController)
+                        }
+                        composable("taskScreen/{isTeamLeader}") { backStackEntry ->
+                            val isTeamLeader =
+                                backStackEntry.arguments?.getString("isTeamLeader")?.toBoolean()
+                                    ?: false
+                            TaskScreen(navController, isTeamLeader)
+                        }
+                        composable("taskDetailScreen/{taskId}") { backStackEntry ->
+                            val taskId = backStackEntry.arguments?.getString("taskId").orEmpty()
+                            val isTeamLeader = false
+                            TaskDetailScreen(navController, taskId, isTeamLeader)
+                        }
                     }
                 }
             }
         }
     }
 }
+
