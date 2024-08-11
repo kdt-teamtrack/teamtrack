@@ -142,8 +142,10 @@ fun LoginScreen(navController: NavHostController) {
             contentAlignment = Alignment.Center
         ) {
             Column {
+                val isTeamLeader = true
+
                 Button(
-                    onClick = { navController.navigate("homeScreen") },
+                    onClick = { navController.navigate("projectSelectionScreen") },
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()

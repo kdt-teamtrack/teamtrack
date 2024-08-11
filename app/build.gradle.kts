@@ -90,10 +90,13 @@ dependencies {
     // Compose dependencies
     implementation ("androidx.compose.ui:ui:1.6.8")
     implementation ("androidx.compose.material3:material3:1.2.1")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.8")
+
     implementation ("androidx.compose.ui:ui-tooling-preview:1.6.8")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
     implementation ("io.coil-kt:coil-compose:2.7.0")
 
     //Serializaion
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+
 }

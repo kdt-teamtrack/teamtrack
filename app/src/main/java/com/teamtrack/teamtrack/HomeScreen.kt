@@ -25,6 +25,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,9 +38,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.teamtrack.teamtrack.project.Project
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
+    // 프로젝트 리스트를 생성합니다. 실제 앱에서는 서버에서 데이터를 받아와야 할 수 있습니다.
+    val projects = remember {
+        listOf(
+            Project("Project A", "팀장", 10),
+            Project("Project B", "팀원", 15)
+        )
+    }
+
     LazyColumn(
         modifier = Modifier
             .background(Color.White)
@@ -50,9 +60,9 @@ fun HomeScreen(navController: NavHostController) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { DateSection() }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { ParticipatingProjectsCard(navController) }
+        item { ParticipatingProjectsCard(navController,projects) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { MyTasksCard(navController) }
+        item { MyTasksCard(navController,isTeamLeader) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { CheckInOutCard() }
         item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -67,8 +77,18 @@ fun WelcomeSection() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
-            Text(text = "Welcome", fontSize = 12.sp, fontWeight = FontWeight.Normal, color = Color.Black)
-            Text(text = "Bill Gates", fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+            Text(
+                text = "Welcome",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black
+            )
+            Text(
+                text = "Bill Gates",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
         }
         Spacer(modifier = Modifier.weight(1f))
         Image(
@@ -88,22 +108,25 @@ fun DateSection() {
 }
 
 @Composable
-fun ParticipatingProjectsCard(navController: NavHostController) {
+fun ParticipatingProjectsCard(navController: NavHostController, projects: List<Project>) {
     InfoCard(
         title = "내가 참여 중인 프로젝트",
-        modifier = Modifier.clickable { navController.navigate("projectScreen") }
+        modifier = Modifier.clickable { navController.navigate("projectSelectionScreen") }  // 알맞게 경로 수정
     ) {
-        ProjectRow(name = "Project A", role = "팀장", iconId = R.drawable.ic_leader)
-        Spacer(modifier = Modifier.height(4.dp))
-        ProjectRow(name = "Project B", role = "팀원", iconId = R.drawable.ic_group)
+        projects.forEach { project ->
+            ProjectRow(name = project.name, role = project.role, iconId = if (project.role == "팀장") R.drawable.ic_leader else R.drawable.ic_group)
+            Spacer(modifier = Modifier.height(4.dp))
+        }
     }
 }
 
 @Composable
-fun MyTasksCard(navController: NavHostController) {
+fun MyTasksCard(navController: NavHostController, isTeamLeader: Boolean) { // Add isTeamLeader as a parameter
     InfoCard(
         title = "내 작업",
-        modifier = Modifier.clickable { navController.navigate("myTasksScreen") }
+        modifier = Modifier.clickable {
+            navController.navigate("taskScreen/${isTeamLeader}")
+        }
     ) {
         TaskRow(task = "API 통합 작업", status = "진행 중")
         Spacer(modifier = Modifier.height(4.dp))
@@ -175,12 +198,16 @@ fun InfoCard(
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
+fun BottomNavigationBar(navController: NavHostController, isTeamLeader: Boolean) { // Add isTeamLeader parameter
     val items = listOf(
-        BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen"),
+        BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen/$isTeamLeader"),
         BottomNavItem("Schedule", iconVector = Icons.Filled.DateRange, route = "calendarScreen"),
         BottomNavItem("Meeting", iconVector = Icons.Filled.Person, route = "meetingApp"),
-        BottomNavItem("QR", iconPainter = painterResource(R.drawable.qr_icon), route = "attendanceScreen")
+        BottomNavItem(
+            "QR",
+            iconPainter = painterResource(R.drawable.qr_icon),
+            route = "attendanceScreen"
+        )
     )
 
     NavigationBar(
@@ -205,7 +232,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                 },
                 label = { Text(item.label, color = Color.Black) },
                 selected = false,
-                onClick = { navController.navigate(item.route) }
+                onClick = { navController.navigate(item.route) } // Make sure the route includes isTeamLeader
             )
         }
     }
