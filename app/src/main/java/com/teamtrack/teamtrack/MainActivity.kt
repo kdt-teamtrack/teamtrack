@@ -18,6 +18,8 @@ import com.teamtrack.teamtrack.attendance.AttendanceScreen
 import com.teamtrack.teamtrack.attendance.QRScreen
 import com.teamtrack.teamtrack.attendance.ResultScreen
 import com.teamtrack.teamtrack.calendar.CalendarScreen
+import com.teamtrack.teamtrack.login.LoginScreen
+import com.teamtrack.teamtrack.login.SignUpScreen
 import com.teamtrack.teamtrack.meetingUI.MeetingAppScreen
 import com.teamtrack.teamtrack.project.CreateProjectScreen
 import com.teamtrack.teamtrack.project.ProjectSelectionScreen
@@ -104,6 +106,9 @@ class MainActivity : ComponentActivity() {
                             val taskId = backStackEntry.arguments?.getString("taskId").orEmpty()
                             val isTeamLeader = false
                             TaskDetailScreen(navController, taskId, isTeamLeader)
+                        }
+                        composable("signupscreen") {
+                            SignUpScreen()
                         }
                     }
                 }
