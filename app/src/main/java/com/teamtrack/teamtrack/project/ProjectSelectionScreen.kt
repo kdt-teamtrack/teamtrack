@@ -10,9 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,48 +21,82 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.teamtrack.teamtrack.R
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.serialization.kotlinx.json.json
+import com.teamtrack.teamtrack.data.Project
+
 
 @Composable
 fun ProjectSelectionScreen(
     navController: NavController,
     onProjectSelected: (Project) -> Unit
 ) {
-    val projects = remember {
-        mutableStateListOf(
-            Project("A 프로젝트", "팀장", 10),
-            Project("B 프로젝트", "팀원", 15)
-        )
+    val client = HttpClient {
+        install(ContentNegotiation) {
+            json()
+        }
+        install(Logging) {
+            level = LogLevel.INFO
+        }
+    }
+    var projects by remember { mutableStateOf<List<Project>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        try {
+            val response: HttpResponse = client.get("http://your.server.address/projects")
+            if (response.status.value == 200) {
+                projects = response.body<List<Project>>()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            isLoading = false
+        }
     }
 
-    Column(
-        modifier = Modifier
-            .background(Color.White)
-            .padding(16.dp)
-            .fillMaxSize()
-    ) {
-        Text(
-            text = "프로젝트를 선택하세요",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        projects.forEach { project ->
-            ProjectCard(
-                project = project,
-                onClick = {
-                    onProjectSelected(project)
-                    val isTeamLeader = project.role == "팀장"
-                    navController.navigate("homeScreen/$isTeamLeader")
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+    if (isLoading) {
+        // 로딩 중일 때 표시할 UI
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = "Loading...", fontSize = 24.sp)
         }
+    } else {
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp)
+                .fillMaxSize()
+        ) {
+            Text(
+                text = "프로젝트를 선택하세요",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
 
-        // 프로젝트 생성 카드 추가
-        CreateNewProjectCard(navController)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            projects.forEach { project ->
+                ProjectCard(
+                    project = project,
+                    onClick = {
+                        onProjectSelected(project)
+                        val isTeamLeader = project.leaderId == "팀장"
+                        navController.navigate("homeScreen/$isTeamLeader")
+                    }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // 프로젝트 생성 카드 추가
+            CreateNewProjectCard(navController)
+        }
     }
 }
 
@@ -86,7 +118,7 @@ fun ProjectCard(project: Project, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = if (project.role == "팀장") R.drawable.ic_leader else R.drawable.ic_group),
+                painter = painterResource(id = R.drawable.ic_group),
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)
@@ -99,18 +131,18 @@ fun ProjectCard(project: Project, onClick: () -> Unit) {
 
             Column {
                 Text(
-                    text = project.name,
+                    text = project.projectName,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 Text(
-                    text = "Role: ${project.role}",
+                    text = "Role: ${project.leaderId}",
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
                 Text(
-                    text = "Members: ${project.memberCount}",
+                    text = "Status: ${project.status}",
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
@@ -130,11 +162,11 @@ fun CreateNewProjectCard(navController: NavController) {
                 color = Color.Gray,
                 shape = RoundedCornerShape(8.dp)
             )
-            .clickable { navController.navigate("createProjectScreen") }, // Navigate to Project Creation Screen
+            .clickable { navController.navigate("createProjectScreen") },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(0.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent // Make the card background transparent
+            containerColor = Color.Transparent
         )
     ) {
         Box(
@@ -151,10 +183,3 @@ fun CreateNewProjectCard(navController: NavController) {
         }
     }
 }
-
-// Sample data class for Project
-data class Project(
-    val name: String,
-    val role: String,
-    val memberCount: Int
-)

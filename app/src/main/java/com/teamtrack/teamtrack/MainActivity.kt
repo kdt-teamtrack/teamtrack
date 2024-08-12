@@ -60,14 +60,15 @@ class MainActivity : ComponentActivity() {
                         composable("loginScreen") { LoginScreen(navController) }
                         composable("projectSelectionScreen") {
                             ProjectSelectionScreen(
-                                navController,
+                                navController = navController,
                                 onProjectSelected = { project ->
-                                    selectedProjectId.value = project.name
-                                    isTeamLeader.value = project.role == "Team Leader"
+                                    selectedProjectId.value = project.projectName  // Updated to use projectName
+                                    isTeamLeader.value = project.leaderId == "팀장"  // Updated to compare leaderId
                                     navController.navigate("homeScreen/${isTeamLeader.value}")
                                 }
                             )
                         }
+
                         composable("homeScreen/{isTeamLeader}") { backStackEntry ->
                             val isTeamLeader =
                                 backStackEntry.arguments?.getString("isTeamLeader")?.toBoolean()
