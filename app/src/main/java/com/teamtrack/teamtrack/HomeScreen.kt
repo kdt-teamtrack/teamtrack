@@ -91,7 +91,7 @@ fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            item { WelcomeSection() }
+            item { WelcomeSection(navController) }
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item { DateSection() }
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -107,7 +107,7 @@ fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
 }
 
 @Composable
-fun WelcomeSection() {
+fun WelcomeSection(navController: NavHostController) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
@@ -132,7 +132,8 @@ fun WelcomeSection() {
             contentDescription = null,
             modifier = Modifier
                 .size(120.dp)
-                .clip(CircleShape),
+                .clip(CircleShape)
+                .clickable { navController.navigate("profileScreen") },
             contentScale = ContentScale.Crop
         )
     }

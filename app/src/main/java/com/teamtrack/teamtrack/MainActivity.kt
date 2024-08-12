@@ -21,6 +21,7 @@ import com.teamtrack.teamtrack.calendar.CalendarScreen
 import com.teamtrack.teamtrack.login.LoginScreen
 import com.teamtrack.teamtrack.login.SignUpScreen
 import com.teamtrack.teamtrack.meetingUI.MeetingAppScreen
+import com.teamtrack.teamtrack.profile.ProfileScreen
 import com.teamtrack.teamtrack.project.CreateProjectScreen
 import com.teamtrack.teamtrack.project.ProjectSelectionScreen
 import com.teamtrack.teamtrack.tasks.TaskDetailScreen
@@ -110,6 +111,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("signUpScreen") {
                             SignUpScreen()
+                        }
+                        composable("profileScreen"){
+                            ProfileScreen()
                         }
                     }
                 }
