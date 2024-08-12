@@ -1,11 +1,9 @@
 package com.teamtrack.teamtrack.login
 
-import android.content.ContentValues
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,9 +32,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.teamtrack.teamtrack.R
 
 @Composable
@@ -142,7 +139,7 @@ fun SignUpButton(
     onSignUpSuccess: () -> Unit
 ) {
     val context = LocalContext.current
-//    val auth = Firebase.auth
+    val auth = Firebase.auth
 
     Button(
         onClick = {
@@ -152,25 +149,24 @@ fun SignUpButton(
                     "이메일 / 비밀번호를 입력하세요",
                     Toast.LENGTH_SHORT
                 ).show()
+            } else {
+                auth.createUserWithEmailAndPassword(userID, userPassword)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("SignUp", "createUserWithEmail:success")
+                            onSignUpSuccess()
+                        } else {
+                            Log.w("SignUp", "createUserWithEmail:failure", task.exception)
+                            Toast.makeText(
+                                context,
+                                task.exception?.message ?: "Sign up failed",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             }
-        }, colors = ButtonDefaults.buttonColors(containerColor = colorTrack)
-//        else {
-//            auth.createUserWithEmailAndPassword(userID, userPassword)
-//                .addOnCompleteListener { task ->
-//                    if (task.isSuccessful) {
-//                        Log.d("SignUp", "createUserWithEmail:success")
-//                        onSignUpSuccess()
-//                    } else {
-//                        Log.w("SignUp", "createUserWithEmail:failure", task.exception)
-//                        Toast.makeText(
-//                            context,
-//                            task.exception?.message ?: "Sign up failed",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//        }
-//    },
+        },
+        colors = ButtonDefaults.buttonColors(containerColor = colorTrack)
     ) {
         Text("가입")
     }

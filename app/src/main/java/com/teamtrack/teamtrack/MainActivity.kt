@@ -107,7 +107,7 @@ class MainActivity : ComponentActivity() {
                             val isTeamLeader = false
                             TaskDetailScreen(navController, taskId, isTeamLeader)
                         }
-                        composable("signupscreen") {
+                        composable("signUpScreen") {
                             SignUpScreen()
                         }
                     }

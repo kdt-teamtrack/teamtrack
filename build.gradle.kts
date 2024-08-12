@@ -5,4 +5,5 @@ plugins {
     kotlin("jvm") version "2.0.10"
     kotlin("plugin.serialization") version "2.0.10"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" // Kotlin 2.0.0 버전으로 설정
+    id("com.google.gms.google-services") version "4.3.15" apply false
 }

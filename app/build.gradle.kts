@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("org.jetbrains.kotlin.plugin.compose") // Compose 컴파일러 플러그인 추가
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.10" // Kotlin 직렬화 플러그인 추가
-
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -100,5 +100,5 @@ dependencies {
 
     //Serializaion
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
 }
