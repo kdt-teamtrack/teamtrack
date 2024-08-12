@@ -3,10 +3,12 @@ package com.teamtrack.teamtrack
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,7 +27,11 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,35 +44,65 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.teamtrack.teamtrack.project.Project
+import io.ktor.serialization.kotlinx.json.json
+import com.teamtrack.teamtrack.data.Project
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
 
 @Composable
 fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
-    // 프로젝트 리스트를 생성합니다. 실제 앱에서는 서버에서 데이터를 받아와야 할 수 있습니다.
-    val projects = remember {
-        listOf(
-            Project("Project A", "팀장", 10),
-            Project("Project B", "팀원", 15)
-        )
+    val client = HttpClient {
+        install(ContentNegotiation) {
+            json()
+        }
+        install(Logging) {
+            level = LogLevel.INFO
+        }
+    }
+    var projects by remember { mutableStateOf<List<Project>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        try {
+            val response: HttpResponse = client.get("http://your.server.address/projects")
+            if (response.status.value == 200) {
+                projects = response.body()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            isLoading = false
+        }
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .background(Color.White)
-            .padding(16.dp)
-            .fillMaxWidth()
-    ) {
-        item { WelcomeSection() }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { DateSection() }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { ParticipatingProjectsCard(navController,projects) }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { MyTasksCard(navController,isTeamLeader) }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { CheckInOutCard() }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { TodayScheduleCard() }
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = "Loading...", fontSize = 24.sp)
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            item { WelcomeSection() }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item { DateSection() }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item { ParticipatingProjectsCard(navController, projects) }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item { MyTasksCard(navController, isTeamLeader) }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item { CheckInOutCard() }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item { TodayScheduleCard() }
+        }
     }
 }
 
@@ -114,7 +150,11 @@ fun ParticipatingProjectsCard(navController: NavHostController, projects: List<P
         modifier = Modifier.clickable { navController.navigate("projectSelectionScreen") }  // 알맞게 경로 수정
     ) {
         projects.forEach { project ->
-            ProjectRow(name = project.name, role = project.role, iconId = if (project.role == "팀장") R.drawable.ic_leader else R.drawable.ic_group)
+            ProjectRow(
+                name = project.projectName,  // Updated to use projectName
+                role = project.leaderId,     // Updated to use leaderId as role
+                iconId = if (project.leaderId == "팀장") R.drawable.ic_leader else R.drawable.ic_group
+            )
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
