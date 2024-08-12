@@ -69,7 +69,7 @@ fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
 
     LaunchedEffect(Unit) {
         try {
-            val response: HttpResponse = client.get("http://your.server.address/projects")
+            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects")
             if (response.status.value == 200) {
                 projects = response.body()
             }
