@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -50,7 +52,7 @@ fun ProjectSelectionScreen(
 
     LaunchedEffect(Unit) {
         try {
-            val response: HttpResponse = client.get("http://your.server.address/projects")
+            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects")
             if (response.status.value == 200) {
                 projects = response.body<List<Project>>()
             }
@@ -67,22 +69,23 @@ fun ProjectSelectionScreen(
             Text(text = "Loading...", fontSize = 24.sp)
         }
     } else {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            Text(
-                text = "프로젝트를 선택하세요",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+            item {
+                Text(
+                    text = "프로젝트를 선택하세요",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            projects.forEach { project ->
+            items(projects) { project ->
                 ProjectCard(
                     project = project,
                     onClick = {
@@ -94,11 +97,15 @@ fun ProjectSelectionScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // 프로젝트 생성 카드 추가
-            CreateNewProjectCard(navController)
+            item {
+                // 프로젝트 생성 카드 추가
+                CreateNewProjectCard(navController)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
+
 
 @Composable
 fun ProjectCard(project: Project, onClick: () -> Unit) {
