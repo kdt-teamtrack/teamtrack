@@ -11,5 +11,6 @@ data class Project(
     val startDate: String,
     val endDate: String,
     val createdAt: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val memberCount: String
 )

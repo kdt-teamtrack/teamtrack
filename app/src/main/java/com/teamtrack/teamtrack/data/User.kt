@@ -1,5 +1,8 @@
 package com.teamtrack.teamtrack.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id: Int,
     val userName: String,

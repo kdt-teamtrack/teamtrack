@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.common.ktx)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -108,4 +109,6 @@ dependencies {
     implementation ("io.ktor:ktor-client-content-negotiation:2.3.12")
 
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+
+    implementation ("com.google.guava:guava:33.0.0-android")
 }
