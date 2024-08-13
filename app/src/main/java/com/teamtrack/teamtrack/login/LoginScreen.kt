@@ -8,10 +8,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -112,11 +116,14 @@ fun LoginScreen(navController: NavHostController) {
             }
         }
 
+        TopSection()
+        Spacer(modifier = Modifier.height(32.dp))
         // Middle Section: 이메일과 비밀번호 입력 칸 추가
         Column(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
+                .weight(1f)
         ) {
             OutlinedTextField(
                 value = email,
@@ -132,26 +139,53 @@ fun LoginScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("비밀번호") },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray,
-                    cursorColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column {
+                Box(modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterStart) {
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text("비밀번호") },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.Black,
+                            unfocusedBorderColor = Color.Gray,
+                            cursorColor = Color.Black
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    TextButton(
+                        onClick = { navController.navigate("signUpScreen") },
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = colorTrack,
+                            containerColor = Color.White
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.folder_icon),
+                            contentDescription = null,
+                            tint = colorTrack,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                        Text("회원가입", fontSize = 16.sp, color = Color.Black)
+                    }
+                }
+            }
         }
+
 
         // Bottom Section
         Box(
             modifier = Modifier
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+                .weight(.5f).padding(16.dp),
+            contentAlignment = Alignment.Center,
         ) {
-            Column {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
                     onClick = {
                         if (email.isNotEmpty() && password.isNotEmpty()) {
@@ -183,31 +217,26 @@ fun LoginScreen(navController: NavHostController) {
                             Toast.makeText(context, "이메일과 비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show()
                         }
                     },
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF33ADFF))
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = colorTrack,
+                        containerColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth().border(2.dp, colorTrack, CircleShape)
                 ) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.folder_icon),
+//                        contentDescription = null,
+//                        modifier = Modifier.padding(8.dp),
+//                        tint = colorTrack
+//                    )
                     Text(
                         text = "로그인",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.Black
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { navController.navigate("signUpScreen") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                ) {
-                    Text("회원이 아니신가요? 회원가입", fontSize = 16.sp, color = Color.Black)
-                }
             }
         }
     }

@@ -42,41 +42,47 @@ fun SignUpScreen() {
     var userPassword by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-
         TopSection()
 
-        Box(
-            Modifier
-                .fillMaxHeight(.5f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center) {
-            Image(
-                painter = painterResource(id = R.drawable.logo), // replace with your logo resource
-                contentDescription = null,
-                modifier = Modifier.size(60.dp)
+        Column(modifier = Modifier.padding(16.dp)) {
+            Box(
+                Modifier
+                    .fillMaxHeight(.5f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo), // replace with your logo resource
+                    contentDescription = null,
+                    modifier = Modifier.size(60.dp)
+                )
+            }
+
+
+            UserInputField(
+                label = "EMAIL",
+                value = userID,
+                onValueChange = { userID = it }
             )
-        }
 
-        UserInputField(
-            label = "EMAIL",
-            value = userID,
-            onValueChange = { userID = it }
-        )
-
-        UserInputField(
-            label = "PASSWORD",
-            value = userPassword,
-            onValueChange = { userPassword = it }
-        )
-
-        Box (modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center) {
-            SignUpButton(userID = userID,
-                userPassword = userPassword,
-                onSignUpSuccess = { }
+            UserInputField(
+                label = "PASSWORD",
+                value = userPassword,
+                onValueChange = { userPassword = it }
             )
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                SignUpButton(userID = userID,
+                    userPassword = userPassword,
+                    onSignUpSuccess = { }
+                )
+            }
         }
     }
 }
@@ -168,7 +174,7 @@ fun SignUpButton(
         },
         colors = ButtonDefaults.buttonColors(containerColor = colorTrack)
     ) {
-        Text("가입")
+        Text("가입", color = Color.Black)
     }
 }
 
