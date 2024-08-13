@@ -94,8 +94,9 @@ fun ProjectSelectionScreen(
                     onClick = {
                         onProjectSelected(project)
                         val isTeamLeader = project.leaderId.toIntOrNull() == userId
-                        navController.navigate("homeScreen/$isTeamLeader")
-                    }
+                        navController.navigate("homeScreen/$userId/$isTeamLeader")
+                    },
+                    userId = userId // userId 전달
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -111,7 +112,14 @@ fun ProjectSelectionScreen(
 
 
 @Composable
-fun ProjectCard(project: Project, onClick: () -> Unit) {
+fun ProjectCard(project: Project, onClick: () -> Unit, userId: Int) {
+    val roleText = if (project.leaderId.toIntOrNull() == userId) "팀장" else "팀원"
+    val roleIcon = if (project.leaderId.toIntOrNull() == userId) {
+        R.drawable.ic_leader // 팀장일 경우 표시할 아이콘
+    } else {
+        R.drawable.ic_group // 팀원일 경우 표시할 아이콘
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -128,7 +136,7 @@ fun ProjectCard(project: Project, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_group),
+                painter = painterResource(id = roleIcon), // 역할에 맞는 아이콘 사용
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)
@@ -147,7 +155,7 @@ fun ProjectCard(project: Project, onClick: () -> Unit) {
                     color = Color.Black
                 )
                 Text(
-                    text = "Role: ${project.leaderId}",
+                    text = "Role: $roleText", // 역할 텍스트 표시
                     fontSize = 16.sp,
                     color = Color.Gray
                 )

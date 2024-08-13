@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,9 +54,13 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import com.teamtrack.teamtrack.data.User
 
 @Composable
-fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
+fun HomeScreen(navController: NavHostController, user: User?, userId: Int, isTeamLeader: Boolean) {
     val client = HttpClient {
         install(ContentNegotiation) {
             json()
@@ -69,7 +74,7 @@ fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
 
     LaunchedEffect(Unit) {
         try {
-            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects")
+            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects/${user?.id}")
             if (response.status.value == 200) {
                 projects = response.body()
             }
@@ -91,11 +96,15 @@ fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            item { WelcomeSection(navController) }
+            item {
+                if (user != null) {
+                    WelcomeSection(navController, user)
+                }
+            }  // 사용자 정보 전달
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item { DateSection() }
             item { Spacer(modifier = Modifier.height(16.dp)) }
-            item { ParticipatingProjectsCard(navController, projects) }
+            item { ParticipatingProjectsCard(navController, projects, userId) } // userId 추가
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item { MyTasksCard(navController, isTeamLeader) }
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -107,7 +116,7 @@ fun HomeScreen(navController: NavHostController, isTeamLeader: Boolean) {
 }
 
 @Composable
-fun WelcomeSection(navController: NavHostController) {
+fun WelcomeSection(navController: NavHostController, user: User) {  // user: Int -> user: User
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
@@ -120,7 +129,7 @@ fun WelcomeSection(navController: NavHostController) {
                 color = Color.Black
             )
             Text(
-                text = "Bill Gates",
+                text = user.userName,  // 사용자 이름 표시
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
@@ -128,7 +137,7 @@ fun WelcomeSection(navController: NavHostController) {
         }
         Spacer(modifier = Modifier.weight(1f))
         Image(
-            painter = painterResource(id = R.drawable.minjee), // Replace with your profile image resource
+            painter = painterResource(id = R.drawable.minjee), // 사용자 프로필 이미지로 대체 가능
             contentDescription = null,
             modifier = Modifier
                 .size(120.dp)
@@ -141,22 +150,68 @@ fun WelcomeSection(navController: NavHostController) {
 
 @Composable
 fun DateSection() {
-    Text(text = "2024.01.10", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+    val currentDate = remember {
+        val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+        dateFormat.format(Date())
+    }
+
+    Text(text = currentDate, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
 }
 
 @Composable
-fun ParticipatingProjectsCard(navController: NavHostController, projects: List<Project>) {
+fun ParticipatingProjectsCard(navController: NavHostController, projects: List<Project>, userId: Int) {
     InfoCard(
         title = "내가 참여 중인 프로젝트",
-        modifier = Modifier.clickable { navController.navigate("projectSelectionScreen") }  // 알맞게 경로 수정
+        modifier = Modifier.clickable { navController.navigate("projectSelectionScreen/$userId") }
     ) {
         projects.forEach { project ->
+            val isTeamLeader = project.leaderId.toIntOrNull() == userId
+            val roleText = if (isTeamLeader) "팀장" else "팀원"
+            val iconId = if (isTeamLeader) R.drawable.ic_leader else R.drawable.ic_group
+
             ProjectRow(
-                name = project.projectName,  // Updated to use projectName
-                role = project.leaderId,     // Updated to use leaderId as role
-                iconId = if (project.leaderId == "팀장") R.drawable.ic_leader else R.drawable.ic_group
+                name = project.projectName,
+                role = roleText,
+                iconId = iconId
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))  // 카드 간 간격 조정
+        }
+    }
+}
+
+@Composable
+fun ProjectRow(name: String, role: String, iconId: Int) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)  // 카드 내부 여백 추가
+    ) {
+        // 아이콘 크기를 키우고, 둥글게 모양을 잡음
+        Image(
+            painter = painterResource(id = iconId),
+            contentDescription = role,
+            modifier = Modifier
+                .size(48.dp)  // 아이콘 크기 증가
+                .clip(CircleShape)
+                .background(Color(0xFF33ADFF))  // 아이콘 배경색
+                .padding(8.dp)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))  // 아이콘과 텍스트 간격
+
+        Column {
+            Text(
+                text = name,
+                fontSize = 20.sp,  // 프로젝트 이름 크기 증가
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            Text(
+                text = role,
+                fontSize = 18.sp,  // 역할 텍스트 크기 증가
+                color = Color.Gray
+            )
         }
     }
 }
@@ -194,19 +249,6 @@ fun TodayScheduleCard() {
 }
 
 @Composable
-fun ProjectRow(name: String, role: String, iconId: Int) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = "$name: $role", fontSize = 18.sp, color = Color.Black)
-        Spacer(modifier = Modifier.weight(1f))
-        Image(
-            painter = painterResource(id = iconId),
-            contentDescription = role,
-            modifier = Modifier.size(18.dp)
-        )
-    }
-}
-
-@Composable
 fun TaskRow(task: String, status: String) {
     Text(text = "○ $task - $status", fontSize = 18.sp, color = Color.Black)
 }
@@ -239,9 +281,9 @@ fun InfoCard(
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController, isTeamLeader: Boolean) { // Add isTeamLeader parameter
+fun BottomNavigationBar(navController: NavHostController, userId: Int, isTeamLeader: Boolean) { // Add userId parameter
     val items = listOf(
-        BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen/$isTeamLeader"),
+        BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen/$userId/$isTeamLeader"),
         BottomNavItem("Schedule", iconVector = Icons.Filled.DateRange, route = "calendarScreen"),
         BottomNavItem("Meeting", iconVector = Icons.Filled.Person, route = "meetingApp"),
         BottomNavItem(
