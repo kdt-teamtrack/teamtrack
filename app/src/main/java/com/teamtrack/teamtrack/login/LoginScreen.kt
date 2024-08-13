@@ -1,5 +1,6 @@
 package com.teamtrack.teamtrack.login
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -35,6 +36,20 @@ import androidx.navigation.NavHostController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.teamtrack.teamtrack.R
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.teamtrack.teamtrack.data.User
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
 
 val colorTrack = Color(0xFF33ADFF)
 
@@ -44,8 +59,11 @@ fun LoginScreen(navController: NavHostController) {
     val context = LocalContext.current
     val auth = Firebase.auth
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+//    var email by remember { mutableStateOf("") }
+//    var password by remember { mutableStateOf("") }
+    // 하드코딩된 이메일과 비밀번호
+    var email by remember { mutableStateOf("bobwhite@example.com") }
+    var password by remember { mutableStateOf("123456") }
 
     Column(
         modifier = Modifier
@@ -174,13 +192,25 @@ fun LoginScreen(navController: NavHostController) {
                             auth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        navController.navigate("projectSelectionScreen")
+                                        // 로그인 성공 시 사용자의 이메일을 기반으로 서버에서 사용자 정보 가져오기
+                                        val userEmail = auth.currentUser?.email
+                                        if (userEmail != null) {
+                                            // 코루틴을 사용하여 서버 요청 처리
+                                            kotlinx.coroutines.MainScope().launch {
+                                                val user = fetchUserDetailsByEmail(userEmail)
+                                                if (user != null) {
+                                                    // 사용자 ID 로그 출력
+                                                    Log.d("LoginScreen", "Fetched User ID: ${user.id}")
+
+                                                    // 사용자 정보를 가져왔을 경우 다음 화면으로 이동
+                                                    navController.navigate("projectSelectionScreen/${user.id}")
+                                                } else {
+                                                    Toast.makeText(context, "사용자 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                        }
                                     } else {
-                                        Toast.makeText(
-                                            context,
-                                            "로그인 실패: ${task.exception?.message}",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        Toast.makeText(context, "로그인 실패: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                                     }
                                 }
                         } else {
@@ -212,3 +242,27 @@ fun LoginScreen(navController: NavHostController) {
     }
 }
 
+
+suspend fun fetchUserDetailsByEmail(email: String): User? {
+    val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json()
+        }
+        install(Logging) {
+            level = LogLevel.INFO
+        }
+    }
+
+    return withContext(Dispatchers.IO) {
+        try {
+            val users: List<User> = client.get("http://192.168.45.25:9292/users?email=$email").body()
+            // 정확히 일치하는 이메일을 가진 사용자를 반환
+            users.find { it.email == email }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        } finally {
+            client.close()
+        }
+    }
+}
