@@ -1,5 +1,6 @@
 package com.teamtrack.teamtrack.project
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,7 +38,8 @@ import com.teamtrack.teamtrack.data.Project
 @Composable
 fun ProjectSelectionScreen(
     navController: NavController,
-    onProjectSelected: (Project) -> Unit
+    onProjectSelected: (Project) -> Unit,
+    userId: Int
 ) {
     val client = HttpClient {
         install(ContentNegotiation) {
@@ -52,9 +54,10 @@ fun ProjectSelectionScreen(
 
     LaunchedEffect(Unit) {
         try {
-            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects")
+            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects/$userId")
             if (response.status.value == 200) {
                 projects = response.body<List<Project>>()
+                Log.d("ProjectSelectionScreen", "Loaded projects: ${projects.size}")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -90,7 +93,7 @@ fun ProjectSelectionScreen(
                     project = project,
                     onClick = {
                         onProjectSelected(project)
-                        val isTeamLeader = project.leaderId == "팀장"
+                        val isTeamLeader = project.leaderId.toIntOrNull() == userId
                         navController.navigate("homeScreen/$isTeamLeader")
                     }
                 )
