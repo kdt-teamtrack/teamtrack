@@ -17,19 +17,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.teamtrack.teamtrack.data.Task
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
 
 @Composable
-fun TaskScreen(navController: NavHostController, isTeamLeader: Boolean) {
-    val tasks = remember { mutableStateListOf<Task>() } // Task 목록을 저장할 리스트
+fun TaskScreen(navController: NavHostController, projectId: Int, isTeamLeader: Boolean) {
+    val tasks = remember { mutableStateListOf<Task>() }
     val selectedTask = remember { mutableStateOf<Task?>(null) }
 
     LaunchedEffect(Unit) {
         if (isTeamLeader) {
-            // 팀장이면 팀원에게 배정된 모든 Task를 가져옴
-            tasks.addAll(fetchTasksForTeamLeader())
+            tasks.addAll(fetchTasksForTeamLeader(projectId))
         } else {
-            // 팀원이면 자신에게 배정된 Task만 가져옴
-            tasks.addAll(fetchTasksForTeamMember())
+            tasks.addAll(fetchTasksForTeamMember(projectId))
         }
     }
 
@@ -68,12 +74,13 @@ fun TaskItem(task: Task, isTeamLeader: Boolean, navController: NavHostController
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = task.title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(text = task.taskName, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "상태: ${task.status}", fontSize = 16.sp)
+            Text(text = "상태: ${task.taskStatus}", fontSize = 16.sp)
             if (isTeamLeader) {
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "담당자: ${task.assignedTo}", fontSize = 16.sp)
+                Text(text = "담당자: ${task.assignedUser}", fontSize = 16.sp)
+                Text(text = "리더가 배정했나요?: ${if (task.isAssignedByLeader) "예" else "아니요"}", fontSize = 16.sp)
             }
         }
     }
@@ -138,27 +145,42 @@ fun UpdateTaskStatusButton(taskId: String, currentStatus: String) {
     }
 }
 
-// 예시 데이터 클래스
-data class Task(
-    val id: String,
-    val title: String,
-    val description: String,
-    val status: String,
-    val assignedTo: String
-)
+suspend fun fetchTasksForTeamLeader(projectId: Int): List<Task> {
+    val client = HttpClient {
+        install(ContentNegotiation) {
+            json()
+        }
+        install(Logging) {
+            level = LogLevel.INFO
+        }
+    }
 
-// 예시 API 호출 함수
-suspend fun fetchTasksForTeamLeader(): List<Task> {
-    // TODO: 서버에서 팀장이 관리하는 모든 Task를 가져오는 API 호출
-    return listOf() // 예시 데이터 반환
+    return try {
+        client.get("http://192.168.45.25:9292/projects/$projectId/tasks").body()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        emptyList()
+    } finally {
+        client.close()
+    }
 }
 
-suspend fun fetchTasksForTeamMember(): List<Task> {
-    // TODO: 서버에서 팀원이 담당하는 Task를 가져오는 API 호출
-    return listOf() // 예시 데이터 반환
-}
+suspend fun fetchTasksForTeamMember(projectId: Int): List<Task> {
+    val client = HttpClient {
+        install(ContentNegotiation) {
+            json()
+        }
+        install(Logging) {
+            level = LogLevel.INFO
+        }
+    }
 
-suspend fun fetchTaskDetail(taskId: String): Task? {
-    // TODO: 서버에서 Task 상세 정보를 가져오는 API 호출
-    return null // 예시 데이터 반환
+    return try {
+        client.get("http://192.168.45.25:9292/projects/$projectId/tasks").body()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        emptyList()
+    } finally {
+        client.close()
+    }
 }

@@ -74,7 +74,7 @@ fun HomeScreen(navController: NavHostController, user: User?, userId: Int, isTea
 
     LaunchedEffect(Unit) {
         try {
-            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects/${user?.id}")
+            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects")
             if (response.status.value == 200) {
                 projects = response.body()
             }
@@ -106,7 +106,7 @@ fun HomeScreen(navController: NavHostController, user: User?, userId: Int, isTea
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item { ParticipatingProjectsCard(navController, projects, userId) } // userId 추가
             item { Spacer(modifier = Modifier.height(16.dp)) }
-            item { MyTasksCard(navController, isTeamLeader) }
+            item { MyTasksCard(navController, projects, isTeamLeader) }  // Updated to use projects
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item { CheckInOutCard() }
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -159,7 +159,11 @@ fun DateSection() {
 }
 
 @Composable
-fun ParticipatingProjectsCard(navController: NavHostController, projects: List<Project>, userId: Int) {
+fun ParticipatingProjectsCard(
+    navController: NavHostController,
+    projects: List<Project>,
+    userId: Int
+) {
     InfoCard(
         title = "내가 참여 중인 프로젝트",
         modifier = Modifier.clickable { navController.navigate("projectSelectionScreen/$userId") }
@@ -217,11 +221,14 @@ fun ProjectRow(name: String, role: String, iconId: Int) {
 }
 
 @Composable
-fun MyTasksCard(navController: NavHostController, isTeamLeader: Boolean) { // Add isTeamLeader as a parameter
+fun MyTasksCard(navController: NavHostController, projects: List<Project>, isTeamLeader: Boolean) {
     InfoCard(
         title = "내 작업",
         modifier = Modifier.clickable {
-            navController.navigate("taskScreen/${isTeamLeader}")
+            // Navigate to task screen using the first project's ID as an example.
+            // Modify this logic as needed for your use case.
+            val firstProjectId = projects.firstOrNull()?.id ?: return@clickable
+            navController.navigate("taskScreen/$firstProjectId/$isTeamLeader")
         }
     ) {
         TaskRow(task = "API 통합 작업", status = "진행 중")
@@ -281,9 +288,17 @@ fun InfoCard(
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController, userId: Int, isTeamLeader: Boolean) { // Add userId parameter
+fun BottomNavigationBar(
+    navController: NavHostController,
+    userId: Int,
+    isTeamLeader: Boolean
+) { // Add userId parameter
     val items = listOf(
-        BottomNavItem("Home", iconVector = Icons.Filled.Home, route = "homeScreen/$userId/$isTeamLeader"),
+        BottomNavItem(
+            "Home",
+            iconVector = Icons.Filled.Home,
+            route = "homeScreen/$userId/$isTeamLeader"
+        ),
         BottomNavItem("Schedule", iconVector = Icons.Filled.DateRange, route = "calendarScreen"),
         BottomNavItem("Meeting", iconVector = Icons.Filled.Person, route = "meetingApp"),
         BottomNavItem(
