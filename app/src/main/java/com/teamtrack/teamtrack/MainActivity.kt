@@ -127,15 +127,15 @@ class MainActivity : ComponentActivity() {
                         composable("createProjectScreen") {
                                 CreateProjectScreen(navController)
                         }
-                        composable("taskScreen/{isTeamLeader}") { backStackEntry ->
-                            val isTeamLeader =
-                                backStackEntry.arguments?.getString("isTeamLeader")?.toBoolean()
-                                    ?: false
-                            TaskScreen(navController, isTeamLeader)
+                        composable("taskScreen/{projectId}/{isTeamLeader}") { backStackEntry ->
+                            val projectId = backStackEntry.arguments?.getString("projectId")?.toIntOrNull() ?: 0
+                            val isTeamLeader = backStackEntry.arguments?.getString("isTeamLeader")?.toBoolean() ?: false
+                            TaskScreen(navController, projectId, isTeamLeader)
                         }
-                        composable("taskDetailScreen/{taskId}") { backStackEntry ->
+
+                        composable("taskDetailScreen/{taskId}/{isTeamLeader}") { backStackEntry ->
                             val taskId = backStackEntry.arguments?.getString("taskId").orEmpty()
-                            val isTeamLeader = false
+                            val isTeamLeader = backStackEntry.arguments?.getString("isTeamLeader")?.toBoolean() ?: false
                             TaskDetailScreen(navController, taskId, isTeamLeader)
                         }
                         composable("signUpScreen") {
