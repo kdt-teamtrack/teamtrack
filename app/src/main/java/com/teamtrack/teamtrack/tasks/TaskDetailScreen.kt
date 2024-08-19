@@ -61,7 +61,7 @@ suspend fun fetchTaskDetail(taskId: String): Task? {
     }
 
     return try {
-        client.get("http://192.168.45.25:9292/tasks/$taskId").body()
+        client.get("http://192.168.45.207:9292/tasks/$taskId").body()
     } catch (e: Exception) {
         e.printStackTrace()
         null

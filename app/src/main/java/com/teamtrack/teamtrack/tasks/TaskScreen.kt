@@ -156,7 +156,7 @@ suspend fun fetchTasksForTeamLeader(projectId: Int): List<Task> {
     }
 
     return try {
-        client.get("http://192.168.45.25:9292/projects/$projectId/tasks").body()
+        client.get("http://192.168.45.207:9292/projects/$projectId/tasks").body()
     } catch (e: Exception) {
         e.printStackTrace()
         emptyList()
@@ -176,7 +176,7 @@ suspend fun fetchTasksForTeamMember(projectId: Int): List<Task> {
     }
 
     return try {
-        client.get("http://192.168.45.25:9292/projects/$projectId/tasks").body()
+        client.get("http://192.168.45.207:9292/projects/$projectId/tasks").body()
     } catch (e: Exception) {
         e.printStackTrace()
         emptyList()

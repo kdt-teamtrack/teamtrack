@@ -74,7 +74,7 @@ fun HomeScreen(navController: NavHostController, user: User?, userId: Int, isTea
 
     LaunchedEffect(Unit) {
         try {
-            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects")
+            val response: HttpResponse = client.get("http://192.168.45.207:9292/projects")
             if (response.status.value == 200) {
                 projects = response.body()
             }

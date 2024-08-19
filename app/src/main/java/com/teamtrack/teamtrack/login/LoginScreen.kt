@@ -257,7 +257,7 @@ suspend fun fetchUserDetailsByEmail(email: String): User? {
 
     return withContext(Dispatchers.IO) {
         try {
-            val users: List<User> = client.get("http://192.168.45.25:9292/users?email=$email").body()
+            val users: List<User> = client.get("http://192.168.45.207:9292/users?email=$email").body()
             // 정확히 일치하는 이메일을 가진 사용자를 반환
             users.find { it.email == email }
         } catch (e: Exception) {

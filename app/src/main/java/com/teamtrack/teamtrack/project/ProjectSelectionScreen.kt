@@ -54,7 +54,7 @@ fun ProjectSelectionScreen(
 
     LaunchedEffect(Unit) {
         try {
-            val response: HttpResponse = client.get("http://192.168.45.25:9292/projects/$userId")
+            val response: HttpResponse = client.get("http://192.168.45.207:9292/projects/$userId")
             if (response.status.value == 200) {
                 projects = response.body<List<Project>>()
                 Log.d("ProjectSelectionScreen", "Loaded projects: ${projects.size}")

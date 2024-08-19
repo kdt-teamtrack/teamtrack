@@ -161,7 +161,7 @@ suspend fun fetchUserById(userId: Int): User? {
     }
 
     return try {
-        client.get("http://192.168.45.25:9292/users/$userId").body<User>()
+        client.get("http://192.168.45.207:9292/users/$userId").body<User>()
     } catch (e: Exception) {
         e.printStackTrace()
         null

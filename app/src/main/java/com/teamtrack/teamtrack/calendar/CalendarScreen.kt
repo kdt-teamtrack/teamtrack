@@ -54,7 +54,7 @@ fun CalendarScreen() {
 
     // Load meeting data from the URL
     LaunchedEffect(Unit) {
-        val meetingData = fetchMeetingData("http://192.168.45.25:9292/meeting")
+        val meetingData = fetchMeetingData("http://192.168.45.207:9292/meeting")
         meetings = meetingData
     }
 
